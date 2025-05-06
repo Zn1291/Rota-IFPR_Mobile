@@ -1,41 +1,49 @@
-import { Header } from "@/components/Header";
+import { Header } from "../components/Header";
 import React from "react";
-import { Text, View, StyleSheet, ImageBackground, Image } from "react-native";
+import { Text, View, StyleSheet, ImageBackground, Image, Button } from "react-native";
+import { Link } from 'expo-router';
 
 export default function Index() {
   return (
     <>
-      <Header />
-
-      <View style={estilos.linhaVermelha} />
-
-      {/**Body da página inicial */}
-      <ImageBackground
-        source={require("../assets/images/PáginaInicial/banner.png")}
-        style={estilos.imgPagInicial}
-      >
-        <Image
-          source={require("../assets/images/PáginaInicial/ROTA_IFPR.png")}
-          style={estilos.rotaLogo}
-        />
-
-        <View style={estilos.conteudoPrincipal}>
-          <View style={estilos.Opacidade}>
-            <Text style={estilos.textoTitulo}>Bem Vindo ao Rota IFPR</Text>
-            <Text style={estilos.textoInicial}>
-              Aqui você encontrará um guia completo para tudo o que precisa
-              saber sobre o curso de gestão da Tecnologia da Informação (GTI).
-            </Text>
-            <Text style={estilos.textoInicial}>
-              Se você é um aluno do IFPR Campus Pinhais ou está considerando se
-              tornar um, aqui é o lugar certo para começar a sua jornada.
-            </Text>
-            <Text style={estilos.textoInicial}>
-              Seja parte da comunidade GTI e construa o seu futuro conosco!
-            </Text>
-          </View>
+      <Header/>
+      <View style={{ flex: 1 }}>
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          <Text>Bem-vindo ao app!</Text>
+          <Link href="/sou_aluno" asChild>
+            <Button title="Ir para Sou Aluno" />
+          </Link>
         </View>
-      </ImageBackground>
+
+        <View style={estilos.linhaVermelha} />
+
+        <ImageBackground
+          source={require("../assets/images/PáginaInicial/banner.png")}
+          style={estilos.imgPagInicial}
+        >
+          <Image
+            source={require("../assets/images/PáginaInicial/ROTA_IFPR.png")}
+            style={estilos.rotaLogo}
+          />
+
+          <View style={estilos.conteudoPrincipal}>
+            <View style={estilos.Opacidade}>
+              <Text style={estilos.textoTitulo}>Bem Vindo ao Rota IFPR</Text>
+              <Text style={estilos.textoInicial}>
+                Aqui você encontrará um guia completo para tudo o que precisa
+                saber sobre o curso de gestão da Tecnologia da Informação (GTI).
+              </Text>
+              <Text style={estilos.textoInicial}>
+                Se você é um aluno do IFPR Campus Pinhais ou está considerando se
+                tornar um, aqui é o lugar certo para começar a sua jornada.
+              </Text>
+              <Text style={estilos.textoInicial}>
+                Seja parte da comunidade GTI e construa o seu futuro conosco!
+              </Text>
+            </View>
+          </View>
+        </ImageBackground>
+      </View>
     </>
   );
 }
