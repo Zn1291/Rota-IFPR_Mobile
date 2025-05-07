@@ -1,6 +1,6 @@
 import { Header } from "../components/Header";
 import React from "react";
-import { Text, View, StyleSheet, ImageBackground, Image, Button } from "react-native";
+import { Text, View, StyleSheet, ImageBackground, Image, Button, } from "react-native";
 import { Link } from 'expo-router';
 
 export default function Index() {
