@@ -42,7 +42,7 @@ export const Menu = (props: { onClose: () => void }) => {
             <Text style={estilos.menuPrincipal}>Quero Ser Aluno</Text>
           </TouchableOpacity>
           <View style={estilos.linha}/>
-          <TouchableOpacity style={estilos.menuItem}>
+          <TouchableOpacity onPress={() => router.push("/contato")} style={estilos.menuItem}>
             <Text style={estilos.menuPrincipal}>Contato</Text>
           </TouchableOpacity>
           <View style={estilos.linha}/>
