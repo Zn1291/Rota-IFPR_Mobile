@@ -22,7 +22,7 @@ export default function Index() {
 
           <View style={estilos.conteudoPrincipal}>
             <View style={estilos.Opacidade}>
-              <Text style={estilos.textoTitulo}>Bem Vindo ao Rota IFPR</Text>
+              <Text style={estilos.textoTitulo}>SEJA BEM VINDO AO ROTA IFPR</Text>
               <Text style={estilos.textoInicial}>
                 Aqui você encontrará um guia completo para tudo o que precisa
                 saber sobre o curso de gestão da Tecnologia da Informação (GTI).
@@ -97,12 +97,13 @@ const estilos = StyleSheet.create({
   },
 
   conteudoPrincipal: {
+    marginTop: -20,
     alignItems: "center",
   },
 
   textoTitulo: {
     color: "white",
-    fontSize: 24,
+    fontSize: 32,
     fontWeight: "bold",
     fontStyle: "italic",
     textAlign: "center",
@@ -110,6 +111,7 @@ const estilos = StyleSheet.create({
   },
 
   textoInicial: {
+    fontWeight: "bold",
     color: "#fff",
     fontSize: 16,
     textAlign: "center",
@@ -118,15 +120,15 @@ const estilos = StyleSheet.create({
   },
 
   Opacidade: {
-    backgroundColor: "rgba(0, 0, 0 , 0.5)",
+    backgroundColor: "rgba(0, 0, 0 , 0.67)",
     padding: 20,
     borderRadius: 10,
     marginHorizontal: 20,
   },
 
   rotaLogo: {
-    width: 140,
-    height: 140,
+    width: 180,
+    height: 180,
     marginBottom: 40
   },
 

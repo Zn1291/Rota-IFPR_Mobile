@@ -1,6 +1,7 @@
 import React from 'react';
 import { Header } from '@/components/Header';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Linking, Image } from 'react-native';
+import { router } from 'expo-router';
 
 export default function SouAluno() {
   const openLink = (url: string) => {
@@ -9,8 +10,8 @@ export default function SouAluno() {
 
   return (
     <ScrollView>
-      <Header />
-      <View  style={styles.banner}>
+      <Header/>
+      <View style={styles.banner}>
         <Image source={require("../assets/images/SouAluno/Faixa.png")}  style={styles.bannerimg}/>
         <Text style={styles.bannerText}>Espaço do Aluno</Text>
       </View>
@@ -30,14 +31,15 @@ export default function SouAluno() {
 
         </View>
 
-      <View style={styles.section}> {/* SESSÃO DE BOTÕES */}
-        <View style={styles.botaoprincipal}> {/* BOTÃO PRINCIPAL */}
+      <View style={styles.section}> 
+        <TouchableOpacity onPress={() => router.push("/murallogin")}>
+        <View style={styles.botaoprincipal}> 
         <Image source={require("../assets/images/SouAluno/Muralestudantes.png")} style={styles.imagem}/>
         <Text>MURAL DOS ESTUDANTES</Text>
         </View>
+        </TouchableOpacity>
       </View>
   
-      {/* BOTÕES SECUNDÁRIOS*/}
       <View style={styles.secondarysection}>
       <View style={styles.blocobotoes}>
          <Image source={require("../assets/images/SouAluno/manual.png")} style={styles.imagem}/>
@@ -58,6 +60,9 @@ export default function SouAluno() {
         <Image source={require("../assets/images/SouAluno/atendimento.png")} style={styles.imagem}/>
         <Text>ATENDIMENTO</Text>
       </View>
+
+    </View>
+    <View style={styles.rodape}>
     </View>
 
     </ScrollView>
@@ -188,4 +193,8 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
   },
 
+  rodape:{
+    backgroundColor: "#009F48",
+    padding: 30,
+  },
 });
