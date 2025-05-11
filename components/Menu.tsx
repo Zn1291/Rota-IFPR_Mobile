@@ -31,7 +31,7 @@ export const Menu = (props: { onClose: () => void }) => {
           <TouchableOpacity style={estilos.menuItem}>
             <Text style={estilos.menuTexto}>Plataformas</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={estilos.menuItem}>
+          <TouchableOpacity onPress={() => router.push("/bibliotecas")} style={estilos.menuItem}>
             <Text style={estilos.menuTexto}>Bibliotecas</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={() => router.push("/emailseatendimento")} style={estilos.menuItem}>

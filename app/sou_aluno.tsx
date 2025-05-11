@@ -56,7 +56,7 @@ export default function SouAluno() {
       </View>
 
       <View style={styles.blocobotoes}>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => router.push("/bibliotecas")}>
         <Image source={require("../assets/images/SouAluno/bibliotecas.png")} style={styles.imagem}/>
         <Text>BIBLIOTECA</Text>
         </TouchableOpacity>

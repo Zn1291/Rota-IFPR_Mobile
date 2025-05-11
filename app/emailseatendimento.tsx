@@ -220,7 +220,7 @@ export default function QueroSerAluno() {
   };
 
   return (
-    <ScrollView>
+    <ScrollView> 
       <Header/>
       <View style={styles.banner}>
         <Image source={require("../assets/images/SouAluno/Faixa.png")}  style={styles.bannerimg}/>
@@ -313,19 +313,6 @@ export default function QueroSerAluno() {
     <View style={styles.rodape}>
     </View>
     </ScrollView>
-  );
-}
-
-type BotaoProps = {
-  texto: string;
-  url: string;
-};
-
-function Botao({ texto, url }: BotaoProps) {
-  return (
-    <TouchableOpacity style={styles.link} onPress={() => Linking.openURL(url)}>
-      <Text style={styles.linkText}>{texto}</Text>
-    </TouchableOpacity>
   );
 }
 
