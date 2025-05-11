@@ -42,26 +42,34 @@ export default function SouAluno() {
   
       <View style={styles.secondarysection}>
       <View style={styles.blocobotoes}>
-         <Image source={require("../assets/images/SouAluno/manual.png")} style={styles.imagem}/>
+        <TouchableOpacity>
+        <Image source={require("../assets/images/SouAluno/manual.png")} style={styles.imagem}/>
         <Text>MANUAL DO ALUNO</Text>
+        </TouchableOpacity>
       </View>
 
       <View style={styles.blocobotoes}>
+        <TouchableOpacity>
         <Image source={require("../assets/images/SouAluno/plataformas.png")} style={styles.imagem}/>
         <Text>PLATAFORMAS</Text>
+        </TouchableOpacity>
       </View>
 
       <View style={styles.blocobotoes}>
+        <TouchableOpacity>
         <Image source={require("../assets/images/SouAluno/bibliotecas.png")} style={styles.imagem}/>
         <Text>BIBLIOTECA</Text>
+        </TouchableOpacity>
       </View>
 
       <View style={styles.blocobotoes}>
+        <TouchableOpacity onPress={() => router.push("/emailseatendimento")}>
         <Image source={require("../assets/images/SouAluno/atendimento.png")} style={styles.imagem}/>
         <Text>ATENDIMENTO</Text>
+        </TouchableOpacity>
       </View>
 
-    </View>
+      </View>
     <View style={styles.rodape}>
     </View>
 
@@ -157,6 +165,7 @@ const styles = StyleSheet.create({
   imagem:{
     width:80,
     height:80,
+    alignSelf: "center",
   },
 
   secondarysection: {
