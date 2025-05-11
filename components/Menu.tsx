@@ -15,8 +15,9 @@ export const Menu = (props: { onClose: () => void }) => {
     <>
       <View style={estilos.menuLateral}>
         <TouchableOpacity style={estilos.close} onPress={props.onClose}>
-          <AntDesign name="closecircleo" size={32} color="black" />
+          <AntDesign name="closecircleo" size={36} color="black" />
         </TouchableOpacity>
+        <View style={estilos.linha}/>
         <View style={estilos.menuItensContainer}>
           <TouchableOpacity onPress={() => router.push("/sou_aluno")} style={estilos.menuItem}>
             <Text style={estilos.menuPrincipal}>Sou Aluno</Text>
@@ -36,12 +37,15 @@ export const Menu = (props: { onClose: () => void }) => {
           <TouchableOpacity style={estilos.menuItem}>
             <Text style={estilos.menuTexto}>Atendimento</Text>
           </TouchableOpacity>
+          <View style={estilos.linha}/>
           <TouchableOpacity style={estilos.menuItem}>
             <Text style={estilos.menuPrincipal}>Quero Ser Aluno</Text>
           </TouchableOpacity>
+          <View style={estilos.linha}/>
           <TouchableOpacity style={estilos.menuItem}>
             <Text style={estilos.menuPrincipal}>Contato</Text>
           </TouchableOpacity>
+          <View style={estilos.linha}/>
         </View>
 
         <View style={estilos.footer}>
@@ -86,30 +90,32 @@ const estilos = StyleSheet.create({
 
   menuTexto: {
     color: "black",
-    fontSize: 18,
+    fontSize: 22,
+    marginLeft: 40,
   },
 
   menuPrincipal: {
     color: "black",
-    fontSize: 22,
+    fontSize: 26,
     fontWeight: "bold",
+    padding: 10,
   },
 
   menulink: {
     marginTop: -30,
     color: "black",
-    fontSize: 22,
-    fontWeight: "bold",
+    fontSize: 26,
+    fontStyle: "italic"
   },
 
   close: {
     position: "absolute",
     right: 16,
-    top: 16,
+    top: 25,
   },
 
   icone: {
-    marginLeft: -50,
+    marginLeft: -40,
     width: 30,
     height: 30,
   },
@@ -119,9 +125,9 @@ const estilos = StyleSheet.create({
     alignItems: "center",
   },
 
-  linhaVermelha: {
+  linha: {
     height: 2,
-    backgroundColor: "red",
+    backgroundColor: "lightgray",
     marginBottom: 10
   },
 
