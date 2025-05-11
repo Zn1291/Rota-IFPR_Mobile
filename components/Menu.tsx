@@ -7,61 +7,60 @@ import {
   Image,
 } from "react-native";
 import AntDesign from "@expo/vector-icons/AntDesign";
+import {router} from 'expo-router';
+
 
 export const Menu = (props: { onClose: () => void }) => {
   return (
     <>
       <View style={estilos.menuLateral}>
         <TouchableOpacity style={estilos.close} onPress={props.onClose}>
-          <AntDesign name="closecircleo" size={32} color="white" />
+          <AntDesign name="closecircleo" size={32} color="black" />
         </TouchableOpacity>
         <View style={estilos.menuItensContainer}>
-          <TouchableOpacity style={estilos.menuItem}>
-            <Text style={estilos.menuTexto}>Sou Aluno</Text>
+          <TouchableOpacity onPress={() => router.push("/sou_aluno")} style={estilos.menuItem}>
+            <Text style={estilos.menuPrincipal}>Sou Aluno</Text>
           </TouchableOpacity>
           <TouchableOpacity style={estilos.menuItem}>
-            <Text style={estilos.menuTexto}>Quero Ser Aluno</Text>
+            <Text style={estilos.menuTexto}>Mural dos Estudantes </Text>
           </TouchableOpacity>
           <TouchableOpacity style={estilos.menuItem}>
-            <Text style={estilos.menuTexto}>Contato</Text>
+            <Text style={estilos.menuTexto}>Manual do Aluno</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={estilos.menuItem}>
+            <Text style={estilos.menuTexto}>Plataformas</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={estilos.menuItem}>
+            <Text style={estilos.menuTexto}>Bibliotecas</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={estilos.menuItem}>
+            <Text style={estilos.menuTexto}>Atendimento</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={estilos.menuItem}>
+            <Text style={estilos.menuPrincipal}>Quero Ser Aluno</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={estilos.menuItem}>
+            <Text style={estilos.menuPrincipal}>Contato</Text>
           </TouchableOpacity>
         </View>
-        <View style={estilos.linhaVermelha} />
 
         <View style={estilos.footer}>
-          <TouchableOpacity
-            onPress={() =>
-              Linking.openURL("https://www.instagram.com/ifpr.oficial/")
-            }
-          >
-            <Image
-              source={require("../assets/images/Plataformas/instagram.png")}
-              style={estilos.icone}
-            />
+        <TouchableOpacity onPress={() => Linking.openURL("https://www.instagram.com/ifpr.oficial/")} style={estilos.menuItem}>
+            <Image source={require("../assets/images/Plataformas/instagram.png")} style={estilos.icone}/>
+            <Text style={estilos.menulink}>Instagram</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity
-            onPress={() =>
-              Linking.openURL(
-                "https://www.facebook.com/REITORIAIFPR/?locale=pt_BR"
-              )
-            }
-          >
-            <Image
-              source={require("../assets/images/PáginaInicial/FACEBOOK.png")}
-              style={estilos.icone}
-            />
+          <TouchableOpacity onPress={() => Linking.openURL("https://www.facebook.com/REITORIAIFPR/?locale=pt_BR")} style={estilos.menuItem}>
+            <Image source={require("../assets/images/PáginaInicial/FACEBOOK.png")} style={estilos.icone}/>
+            <Text style={estilos.menulink}>Facebook</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity
-            onPress={() => Linking.openURL("https://ifpr.edu.br/pinhais/")}
-          >
-            <Image
-              source={require("../assets/images/PáginaInicial/IFPR_LOGO.png")}
-              style={estilos.icone}
-            />
+          <TouchableOpacity onPress={() => Linking.openURL("https://ifpr.edu.br/pinhais/")} style={estilos.menuItem}>
+            <Image source={require("../assets/images/PáginaInicial/IFPR_LOGO.png")} style={estilos.icone}/>
+            <Text style={estilos.menulink}>Site Institucional</Text>
           </TouchableOpacity>
         </View>
+
       </View>
     </>
   );
@@ -72,9 +71,9 @@ const estilos = StyleSheet.create({
     position: "absolute",
     right: 0,
     top: 0,
-    width: 200,
+    width: 415,
     height: "100%",
-    backgroundColor: "#666666",
+    backgroundColor: "white",
     paddingTop: 80,
     paddingHorizontal: 10,
     zIndex: 10,
@@ -82,13 +81,27 @@ const estilos = StyleSheet.create({
   },
 
   menuItem: {
-    marginBottom: 30,
+    marginBottom: 20,
   },
 
   menuTexto: {
-    color: "white",
-    fontSize: 16,
+    color: "black",
+    fontSize: 18,
   },
+
+  menuPrincipal: {
+    color: "black",
+    fontSize: 22,
+    fontWeight: "bold",
+  },
+
+  menulink: {
+    marginTop: -30,
+    color: "black",
+    fontSize: 22,
+    fontWeight: "bold",
+  },
+
   close: {
     position: "absolute",
     right: 16,
@@ -96,17 +109,14 @@ const estilos = StyleSheet.create({
   },
 
   icone: {
+    marginLeft: -50,
     width: 30,
     height: 30,
   },
 
   footer: {
-    backgroundColor: "#666666",
-    paddingVertical: 10,
-    flexDirection: "row",
-    justifyContent: "space-around",
+    justifyContent: "center",
     alignItems: "center",
-    marginBottom: 10
   },
 
   linhaVermelha: {

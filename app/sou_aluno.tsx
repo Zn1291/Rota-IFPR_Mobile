@@ -8,34 +8,58 @@ export default function SouAluno() {
   };
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView>
       <Header />
-      <View style={styles.banner}>
+      <View  style={styles.banner}>
+        <Image source={require("../assets/images/SouAluno/Faixa.png")}  style={styles.bannerimg}/>
         <Text style={styles.bannerText}>Espaço do Aluno</Text>
       </View>
 
-      <View style={styles.section}>
-        
-        <View style={styles.bloco}>
+        <View style={styles.acesso}>
+         
+          <View>
+          <Text style={styles.acessoTitulo}>Acesso rápido</Text>
+          </View>
           
-          <Text style={styles.blocoTitulo}>Acesso rápido</Text>
-          <Text style={styles.blocoTexto}>Acesse os principais sistemas e ferramentas para estudar</Text> 
-          <Botao texto="Grade Horária" url="https://ifpr.edu.br/pinhais/institucional/area-do-aluno/horario-de-aulas-e-atendimento/" />
+          <View style={styles.link}>
+          <Botao texto="Grade Horária" url="https://ifpr.edu.br/pinhais/institucional/area-do-aluno/horario-de-aulas-e-atendimento/"/>
           <Botao texto="Calendário Acadêmico" url="https://ifpr.edu.br/pinhais/institucional/area-do-aluno/calendario-academico/" />
           <Botao texto="SUAP" url="https://suap.ifpr.edu.br/" />
           <Botao texto="AVA" url="https://ava.ifpr.edu.br/" />
-      
+          </View>
+
         </View>
-      
+
+      <View style={styles.section}> {/* SESSÃO DE BOTÕES */}
+        <View style={styles.botaoprincipal}> {/* BOTÃO PRINCIPAL */}
+        <Image source={require("../assets/images/SouAluno/Muralestudantes.png")} style={styles.imagem}/>
+        <Text>MURAL DOS ESTUDANTES</Text>
+        </View>
+      </View>
+  
+      {/* BOTÕES SECUNDÁRIOS*/}
+      <View style={styles.secondarysection}>
+      <View style={styles.blocobotoes}>
+         <Image source={require("../assets/images/SouAluno/manual.png")} style={styles.imagem}/>
+        <Text>MANUAL DO ALUNO</Text>
       </View>
 
-      <View>
-        <Text>MURAL DOS ESTUDANTES</Text>
-        <Text>MANUAL DO ALUNO</Text>
-        <Text>PLATAFORMAS E RECURSOS</Text>
-        <Text>BIBLIOTECAS</Text>
-        <Text>EMAILS E ATENDIMENTO</Text>
+      <View style={styles.blocobotoes}>
+        <Image source={require("../assets/images/SouAluno/plataformas.png")} style={styles.imagem}/>
+        <Text>PLATAFORMAS</Text>
       </View>
+
+      <View style={styles.blocobotoes}>
+        <Image source={require("../assets/images/SouAluno/bibliotecas.png")} style={styles.imagem}/>
+        <Text>BIBLIOTECA</Text>
+      </View>
+
+      <View style={styles.blocobotoes}>
+        <Image source={require("../assets/images/SouAluno/atendimento.png")} style={styles.imagem}/>
+        <Text>ATENDIMENTO</Text>
+      </View>
+    </View>
+
     </ScrollView>
   );
 }
@@ -54,61 +78,114 @@ function Botao({ texto, url }: BotaoProps) {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#f3f3f3',
+  banner:{ 
+    height:87,
   },
-  banner: {
-    height: 200,
-    backgroundColor: '#00B050',
-    justifyContent: 'center',
-    alignItems: 'center',
+  bannerimg:{
+    width: 415,
   },
   bannerText: {
-    fontSize: 32,
+    marginLeft: 30,
+    marginTop: -60,
+    fontSize: 24,
     fontWeight: 'bold',
     color: '#fff',
   },
+
+  acesso: {
+    backgroundColor: '#343434',
+    elevation: 4,
+    shadowColor: '#000',
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    shadowOffset: { width: 0, height: 2 },
+    padding: 20,
+  },
+
+  acessoTitulo: {
+    textAlign: "center",
+    fontSize: 22,
+    fontWeight: 'bold',
+    color: "white",
+    marginBottom: 5,
+  },
+
+  link: {
+    alignSelf: "center",
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    flex: 1,
+    backgroundColor: '#1C1C1C',
+    padding: 5,
+    borderRadius: 50,
+    marginLeft: 10,
+  },
+
+  linkText: {
+    alignContent: "center",
+    fontSize: 12,
+    wordWrap: "break-word",
+    color: '#fff',
+    fontWeight: 'bold',
+    textAlign: 'center',
+    textDecorationStyle: "solid",
+    textDecorationColor: "white",
+  },
+
   section: {
     padding: 20,
   },
-  bloco: {
+  
+  botaoprincipal: {
+    padding:10,
+    alignItems: "center",
     backgroundColor: '#ffffff',
-    padding: 20,
     borderRadius: 15,
     elevation: 4,
     shadowColor: '#000',
     shadowOpacity: 0.2,
     shadowRadius: 4,
     shadowOffset: { width: 0, height: 2 },
-    marginBottom: 30, // substituindo gap
+    marginBottom: -30,
   },
-  blocoTitulo: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#333',
+
+  imagem:{
+    width:80,
+    height:80,
+  },
+
+  secondarysection: {
+    padding: 20,
+    flexDirection: "row",
+    flexWrap: "wrap",
+    flex: 1,
+  },
+
+  blocobotoes: {
+    display: "flex",
+    alignItems: "center",
+    width: 180,
+    padding:10,
+    backgroundColor: '#ffffff',
+    borderRadius: 15,
+    elevation: 4,
+    shadowColor: '#000',
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    shadowOffset: { width: 0, height: 2 },
     marginBottom: 10,
+    marginRight: 5,
   },
-  blocoTexto: {
-    fontSize: 16,
-    color: '#666',
-    marginBottom: 15,
+
+  bloco: {
+    padding: 20,
+    backgroundColor: '#ffffff',
+    borderRadius: 15,
+    elevation: 4,
+    shadowColor: '#000',
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    shadowOffset: { width: 0, height: 2 },
   },
-  botoes: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'center',
-  },
-  link: {
-    backgroundColor: '#747373',
-    paddingVertical: 12,
-    paddingHorizontal: 20,
-    borderRadius: 50,
-    margin: 5,
-  },
-  linkText: {
-    color: '#fff',
-    fontWeight: 'bold',
-    textAlign: 'center',
-  },
+
 });

@@ -1,6 +1,7 @@
 import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
 import { Menu } from "./Menu";
 import { useState } from "react";
+import { router } from "expo-router";
 
 const estilos = StyleSheet.create({
   estiloHeader: {
@@ -13,7 +14,7 @@ const estilos = StyleSheet.create({
   },
 
   logoifprInicial: {
-    width: 80,
+    width: 250,
     height: 95,
   },
 
@@ -38,10 +39,12 @@ export const Header = () => {
   return (
     <>
       <View style={estilos.estiloHeader}>
+        <TouchableOpacity onPress={() => router.push("/")}>
         <Image
-          source={require("../assets/images/PáginaInicial/ifpr-reduzido.png")}
+          source={require("../assets/images/PáginaInicial/IFPR_PINHAIS.png")}
           style={estilos.logoifprInicial}
         />
+        </TouchableOpacity>
         <TouchableOpacity onPress={toggleMenu} style={estilos.menuIcone}>
           <View style={estilos.bar} />
           <View style={estilos.bar} />

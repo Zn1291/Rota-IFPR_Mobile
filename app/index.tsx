@@ -1,19 +1,13 @@
 import { Header } from "../components/Header";
 import React from "react";
-import { Text, View, StyleSheet, ImageBackground, Image, Button, } from "react-native";
-import { Link } from 'expo-router';
+import { Text, View, StyleSheet, ImageBackground, Image, Button, TouchableOpacity } from "react-native";
+import { Link, router } from 'expo-router';
 
 export default function Index() {
   return (
     <>
       <Header/>
       <View style={{ flex: 1 }}>
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-          <Text>Bem-vindo ao app!</Text>
-          <Link href="/sou_aluno" asChild>
-            <Button title="Ir para Sou Aluno" />
-          </Link>
-        </View>
 
         <View style={estilos.linhaVermelha} />
 
@@ -40,6 +34,23 @@ export default function Index() {
               <Text style={estilos.textoInicial}>
                 Seja parte da comunidade GTI e construa o seu futuro conosco!
               </Text>
+
+              <View style={estilos.section}>
+              <TouchableOpacity>
+              <View style={estilos.Botoes}>
+              <Image source={require("../assets/images/PáginaInicial/quero-ser.png")} style={estilos.imagembotoes}/> 
+              <Text style={estilos.Botoestexto}>Quero Ser Aluno</Text>
+              </View>
+              </TouchableOpacity>
+
+              <TouchableOpacity onPress={() => router.push("/sou_aluno")}>
+              <View style={estilos.Botoes}>
+              <Image source={require("../assets/images/PáginaInicial/sou-aluno.png")} style={estilos.imagembotoes}/> 
+              <Text style={estilos.Botoestexto}> Sou Aluno</Text>
+              </View>
+              </TouchableOpacity>
+              </View>
+
             </View>
           </View>
         </ImageBackground>
@@ -57,25 +68,27 @@ const estilos = StyleSheet.create({
   },
 
   Botoes: {
-    flexDirection: "row",
+    padding: 32,
+    display: "flex",
     alignItems: "center",
+  },
+
+  Botoestexto: {
+    backgroundColor: "#343434",
+    borderRadius: 35,
+    padding: 4,
+    marginTop: 10,
+    color: "white",
+    fontSize: 15,
+    fontWeight: "bold",
+    marginBottom: -30,
+  },
+
+  section: {
+    flexDirection:"row",
     flexWrap: "wrap",
   },
-
-  textoBotao: {
-    color: "#fff",
-    fontSize: 12,
-    fontWeight: "bold",
-  },
-
-  botao: {
-    marginLeft: 10,
-    paddingVertical: 10,
-    paddingHorizontal: 15,
-    backgroundColor: "#005f46",
-    borderRadius: 5,
-  },
-
+  
   imgPagInicial: {
     flex: 1,
     resizeMode: "cover",
@@ -115,5 +128,13 @@ const estilos = StyleSheet.create({
     width: 140,
     height: 140,
     marginBottom: 40
+  },
+
+  imagembotoes:{
+  marginTop: 5,
+  backgroundColor: "#343434",
+  borderRadius: 50,
+  width: 80,
+  height: 80,
   },
 });
