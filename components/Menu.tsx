@@ -25,7 +25,7 @@ export const Menu = (props: { onClose: () => void }) => {
           <TouchableOpacity onPress={() => router.push("/murallogin")} style={estilos.menuItem}>
             <Text style={estilos.menuTexto}>Mural dos Estudantes </Text>
           </TouchableOpacity>
-          <TouchableOpacity style={estilos.menuItem}>
+          <TouchableOpacity onPress={() => router.push("/manualdoaluno")} style={estilos.menuItem}>
             <Text style={estilos.menuTexto}>Manual do Aluno</Text>
           </TouchableOpacity >
           <TouchableOpacity onPress={() => router.push("/plataformaserecursos")} style={estilos.menuItem}>

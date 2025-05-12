@@ -78,6 +78,45 @@ export default function QueroSerAluno() {
             ACESSE O SUAP
           </Text>
         </TouchableOpacity>
+        <View>
+        <Text style={styles.firstacesstitulo}>
+          Nele você Encontra:
+        </Text>
+        <View>
+        <Text style={styles.infos}>
+          Dados do Aluno
+        </Text>
+        <Text style={styles.infos}>
+          Declaração de Matrícula
+        </Text>
+        <Text style={styles.infos}>
+         Histórico Escolar 
+        </Text>
+        <Text style={styles.infos}>
+         Informações Acadêmicas 
+        </Text>
+        <Text style={styles.infos}>
+        Disciplinas
+        </Text>
+        <Text style={styles.infos}>
+        Frequências
+        </Text>
+        <Text style={styles.infos}>
+        Notas
+        </Text>
+        <Text style={styles.infos}>
+        Renovação de Matrícula
+        </Text>
+        <Text style={styles.infos}>
+        Abertura de Requerimentos
+        </Text>
+        <Text style={styles.infos}>
+        Editais de Pesquisa e Extensão
+        </Text>
+        </View>
+        </View>
+
+
         <View style={styles.firstacess}>
         <Text style={styles.firstacesstitulo}>
         Primeiro acesso ao SUAP
@@ -332,5 +371,18 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
   },
+
+  principaisinfos:{
+    flexDirection: "row",
+    flexWrap: "wrap",
+    flex: 1,
+  },
+
+  infos:{
+    padding: 5,
+    fontSize: 18,
+    fontStyle: "italic",
+  },
+
 
 });

@@ -43,7 +43,7 @@ export default function SouAluno() {
   
       <View style={styles.secondarysection}>
       <View style={styles.blocobotoes}>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => router.push("/manualdoaluno")}>
         <Image source={require("../assets/images/SouAluno/manual.png")} style={styles.imagem}/>
         <Text>MANUAL DO ALUNO</Text>
         </TouchableOpacity>
