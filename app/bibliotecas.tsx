@@ -54,6 +54,8 @@ export default function QueroSerAluno() {
   return (
     <ScrollView> 
       <Header/>
+      <View style={styles.linhaVermelha} />
+
       <Image 
         source={require("../assets/images/MatrizCurricular/bibli.png")} 
         accessibilityLabel="Biblioteca" 
@@ -78,13 +80,13 @@ export default function QueroSerAluno() {
         
         <Text style={{textAlign: "center", fontWeight: "bold"}}>CONTEÚDO</Text>
         <View style={styles.botoes}>
-        <TouchableOpacity onPress={() => Linking.openURL("https://docs.google.com/spreadsheets/d/1q0Fh4VAwX_Nj3b_2uEQD-7zBQGXVz3W5iOHk-0r7Pxk/edit#gid=996102884")} style={styles.botao}>
+        <TouchableOpacity onPress={() => Linking.openURL("https://biblioteca.ifpr.edu.br/?_ga=2.260957197.100605356.1690800874-2008693651.1686318051")} style={styles.botao}>
           <Text style={styles.textobotao}>CONSULTA AO ACERVO</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => Linking.openURL("https://ifpr.edu.br/pinhais/institucional/secretaria-academica/secretaria-academica/")} style={styles.botao}>
+        <TouchableOpacity onPress={() => Linking.openURL("https://biblioteca.ifpr.edu.br/login?redirect=/meupergamum")} style={styles.botao}>
           <Text style={styles.textobotao}>RENOVAÇÃO ONLINE</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => Linking.openURL("https://ifpr.edu.br/pinhais/institucional/secretaria-academica/secretaria-academica/")} style={styles.botao}>
+        <TouchableOpacity onPress={() => Linking.openURL("https://ifpr.edu.br/rede-de-bibliotecas-do-ifpr/trabalhos-academicos/")} style={styles.botao}>
           <Text style={styles.textobotao}>TEMPLATE PARA TRABALHOS</Text>
         </TouchableOpacity>
         </View>
@@ -242,4 +244,11 @@ const styles = StyleSheet.create({
     backgroundColor: "#009F48",
     padding: 30,
   },
+
+  linhaVermelha: {
+    height: 2,
+    backgroundColor: "red",
+    marginHorizontal: 1,
+  },
+
 });

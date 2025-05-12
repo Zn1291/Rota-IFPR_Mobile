@@ -21,6 +21,7 @@ export default function LoginMural() {
   return (
     <ScrollView>
       <Header/>
+      <View style={styles.linhaVermelha} />
       <View style={styles.banner}>
         <Image source={require("../assets/images/SouAluno/Faixa.png")}  style={styles.bannerimg}/>
         <Text style={styles.bannerText}>Mural dos Estudantes</Text>
@@ -155,6 +156,12 @@ const styles = StyleSheet.create({
     marginTop: 50,
     backgroundColor: "#009F48",
     padding: 30,
+  },
+
+  linhaVermelha: {
+    height: 2,
+    backgroundColor: "red",
+    marginHorizontal: 1,
   },
 
 });

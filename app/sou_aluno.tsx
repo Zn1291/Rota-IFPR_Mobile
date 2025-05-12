@@ -11,6 +11,7 @@ export default function SouAluno() {
   return (
     <ScrollView>
       <Header/>
+      <View style={styles.linhaVermelha} />
       <View style={styles.banner}>
         <Image source={require("../assets/images/SouAluno/Faixa.png")}  style={styles.bannerimg}/>
         <Text style={styles.bannerText}>Espaço do Aluno</Text>
@@ -49,7 +50,7 @@ export default function SouAluno() {
       </View>
 
       <View style={styles.blocobotoes}>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => router.push("/plataformaserecursos")}>
         <Image source={require("../assets/images/SouAluno/plataformas.png")} style={styles.imagem}/>
         <Text>PLATAFORMAS</Text>
         </TouchableOpacity>
@@ -205,5 +206,11 @@ const styles = StyleSheet.create({
   rodape:{
     backgroundColor: "#009F48",
     padding: 30,
+  },
+
+  linhaVermelha: {
+    height: 2,
+    backgroundColor: "red",
+    marginHorizontal: 1,
   },
 });

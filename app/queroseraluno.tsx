@@ -35,11 +35,11 @@ const accordionStyles = StyleSheet.create({
   },
   title: {
     color: '#fff',
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: 'bold',
   },
   content: {
-    fontSize: 18,
+    fontSize: 16,
     padding: 15,
     backgroundColor: '#fff',
   },
@@ -55,6 +55,7 @@ export default function QueroSerAluno() {
   return (
     <ScrollView>
       <Header/>
+      <View style={styles.linhaVermelha} />
       <Image source={require("../assets/images/QueroSerAluno/Capa.png")}  style={styles.bannerimg}/>
       <View style={styles.banner}>
         <Image source={require("../assets/images/SouAluno/Faixa.png")}  style={styles.bannerimg}/>
@@ -192,5 +193,11 @@ const styles = StyleSheet.create({
   rodape:{
     backgroundColor: "#009F48",
     padding: 30,
+  },
+
+  linhaVermelha: {
+    height: 2,
+    backgroundColor: "red",
+    marginHorizontal: 1,
   },
 });

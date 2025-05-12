@@ -21,6 +21,7 @@ export default function LoginMural() {
   return (
     <ScrollView>
       <Header/>
+      <View style={styles.linhaVermelha} />
       <View style={styles.banner}>
         <Image source={require("../assets/images/SouAluno/Faixa.png")}  style={styles.bannerimg}/>
         <Text style={styles.bannerText}>Mural dos Estudantes</Text>
@@ -44,7 +45,7 @@ export default function LoginMural() {
         <View style={styles.firstacess}>
         <Text style={styles.redefinirTitulo}> Não sabe qual é seu email Institucional?</Text>
         <Text style={styles.redefinirtexto}> Não se preocupa, o Rota te ajuda, navegue até a página de Plataformas clicando no botão abaixo que lá te explicamos como conseguir fazer o 1º acesso no email</Text>
-        <TouchableOpacity onPress={() => router.push("/sou_aluno")}>
+        <TouchableOpacity onPress={() => router.push("/plataformaserecursos")}>
           <Text style={styles.botao}>Plataformas e Recursos</Text>
         </TouchableOpacity>
         </View>
@@ -143,6 +144,12 @@ const styles = StyleSheet.create({
     marginTop: 50,
     backgroundColor: "#009F48",
     padding: 30,
+  },
+
+  linhaVermelha: {
+    height: 2,
+    backgroundColor: "red",
+    marginHorizontal: 1,
   },
 
 });

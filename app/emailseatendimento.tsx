@@ -222,6 +222,7 @@ export default function QueroSerAluno() {
   return (
     <ScrollView> 
       <Header/>
+      <View style={styles.linhaVermelha} />
       <View style={styles.banner}>
         <Image source={require("../assets/images/SouAluno/Faixa.png")}  style={styles.bannerimg}/>
         <Text style={styles.bannerText}>Emails e Atendimento</Text>
@@ -391,5 +392,11 @@ const styles = StyleSheet.create({
   rodape:{
     backgroundColor: "#009F48",
     padding: 30,
+  },
+
+  linhaVermelha: {
+    height: 2,
+    backgroundColor: "red",
+    marginHorizontal: 1,
   },
 });
