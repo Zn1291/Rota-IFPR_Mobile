@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1033696459638",
+    "project_id": "rotaifpr",
+    "storage_bucket": "rotaifpr.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1033696459638:android:5dd18fbfa2147b4acf9857",
+        "android_client_info": {
+          "package_name": "com.rotaifpr.mobile"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDY53QHoC9FpEyrkoeV9-QTrsDZN5OBOdo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -22,7 +22,7 @@ export default function Index() {
 
           <View style={estilos.conteudoPrincipal}>
             <View style={estilos.Opacidade}>
-              <Text style={estilos.textoTitulo}>SEJA BEM VINDO AO ROTA IFPR</Text>
+              <Text style={estilos.textoTitulo}>BEM VINDO AO ROTA IFPR</Text>
               <Text style={estilos.textoInicial}>
                 Aqui você encontrará um guia completo para tudo o que precisa
                 saber sobre o curso de gestão da Tecnologia da Informação (GTI).
@@ -36,7 +36,7 @@ export default function Index() {
               </Text>
 
               <View style={estilos.section}>
-              <TouchableOpacity onPress={() => router.push("/queroseraluno")}>
+              <TouchableOpacity onPress={() => router.push("/")}>
               <View style={estilos.Botoes}>
               <Image source={require("../assets/images/PáginaInicial/quero-ser.png")} style={estilos.imagembotoes}/> 
               <Text style={estilos.Botoestexto}>Quero Ser Aluno</Text>

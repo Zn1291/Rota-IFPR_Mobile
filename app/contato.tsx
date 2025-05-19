@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Header } from '@/components/Header';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, TextInput, Alert } from 'react-native';
-import email from 'react-native-email';
+//import email from 'react-native-email';
 
 export default function Contato() {
   const [nome, setNome] = useState('');
@@ -16,10 +16,10 @@ export default function Contato() {
     }
 
     const to = ['contatorotaifpr@gmail.com']; 
-    email(to, {
-      subject: 'Contato via App',
-      body: `Nome: ${nome}\nEmail: ${emailAddress}\nTelefone: ${telefone}\nMensagem: ${mensagem}`
-    }).catch(console.error);
+    //email(to, {
+      //subject: 'Contato via App',
+      //body: `Nome: ${nome}\nEmail: ${emailAddress}\nTelefone: ${telefone}\nMensagem: ${mensagem}`
+    //}).catch(console.error);
 
     setNome('');
     setEmailAddress('');
