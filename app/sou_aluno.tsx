@@ -33,7 +33,7 @@ export default function SouAluno() {
         </View>
 
       <View style={styles.section}> 
-        <TouchableOpacity onPress={() => router.push("/murallogin")}>
+        <TouchableOpacity onPress={() => router.push("/loginmural")}>
         <View style={styles.botaoprincipal}> 
         <Image source={require("../assets/images/SouAluno/Muralestudantes.png")} style={styles.imagem}/>
         <Text>MURAL DOS ESTUDANTES</Text>

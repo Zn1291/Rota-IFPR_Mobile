@@ -1,5 +1,8 @@
-import { initializeApp } from 'firebase/app';
-import { getAuth } from 'firebase/auth';
+import { initializeApp } from "firebase/app";
+import { getAuth } from "firebase/auth";
+import { makeRedirectUri } from 'expo-auth-session';
+
+console.log(makeRedirectUri());
 
 const firebaseConfig = {
   apiKey: "AIzaSyAbAQ6AlD9Z1CT5j5aoIVu5anwqhGS3wCE",
@@ -12,5 +15,6 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
+const auth = getAuth(app); // Persistência em memória (não mantém login após fechar o app)
 
-export const auth = getAuth(app);
+export { auth };

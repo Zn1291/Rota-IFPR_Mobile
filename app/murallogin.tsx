@@ -6,7 +6,7 @@ import { router } from 'expo-router'; // Importa o roteador
 
 // --- IMPORTAÇÕES DO FIREBASE PARA LOGIN ---
 import { signInWithEmailAndPassword } from 'firebase/auth'; // Função específica para login
-import { auth } from './firebase'; // Importa a instância 'auth' que você exportou no firebase.tsx
+import { auth } from '../firebase'; // Importa a instância 'auth' que você exportou no firebase.tsx
 // --- FIM DAS IMPORTAÇÕES DO FIREBASE PARA LOGIN ---
 
 export default function LoginMural() {

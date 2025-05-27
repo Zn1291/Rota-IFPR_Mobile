@@ -7,6 +7,43 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:1033696459638:android:67f0e1017937c72ecf9857",
+        "android_client_info": {
+          "package_name": "android.rotaifpr"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1033696459638-ikpjv5dlqed2vpuuucfpv9udmbt4mug2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "android.rotaifpr",
+            "certificate_hash": "118da579665b5c99f724fa26bd925eb53495385a"
+          }
+        },
+        {
+          "client_id": "1033696459638-82m028n9icrca9darv4v80asncub61li.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDY53QHoC9FpEyrkoeV9-QTrsDZN5OBOdo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1033696459638-82m028n9icrca9darv4v80asncub61li.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:1033696459638:android:5dd18fbfa2147b4acf9857",
         "android_client_info": {
           "package_name": "com.rotaifpr.mobile"
