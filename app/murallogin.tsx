@@ -3,16 +3,32 @@ import { Header } from '@/components/Header'; // Certifique-se de que este camin
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Linking, Image, TextInput, Alert, Button } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons'; // Importa o ícone para mostrar/esconder senha (verifique se @expo/vector-icons está instalado)
 import { router } from 'expo-router'; // Importa o roteador
+import { GoogleSignin, User, isSuccessResponse } from '@react-native-google-signin/google-signin';
 
 // --- IMPORTAÇÕES DO FIREBASE PARA LOGIN ---
 import { signInWithEmailAndPassword } from 'firebase/auth'; // Função específica para login
-import { auth } from '../firebase'; // Importa a instância 'auth' que você exportou no firebase.tsx
 // --- FIM DAS IMPORTAÇÕES DO FIREBASE PARA LOGIN ---
 
 export default function LoginMural() {
   // Função para abrir links externos (mantida, mas não diretamente relacionada ao login Firebase)
   const openLink = (url: string) => {
     Linking.openURL(url);
+  }
+
+  const [auth, setAuth] = useState<User | null>(null);
+
+  async function handleGoogleSignIn() {
+    try {
+      await GoogleSignin.hasPlayServices();
+      const response = await GoogleSignin.signIn();
+
+      if (isSuccessResponse(response)) {
+        console.log(response.data);
+        setAuth(response.data);
+      }
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   const [mostrarSenha, setMostrarSenha] = useState(false); // Estado para mostrar/esconder senha
@@ -124,6 +140,9 @@ export default function LoginMural() {
           <TouchableOpacity style={styles.botao} onPress={handleLogin}>
             <Text style={styles.textobotao}>Entrar</Text>
           </TouchableOpacity>
+
+          <Button title="LOGAR COM GOOGLE" onPress={handleGoogleSignIn} />
+
 
           {/* Botão BETA - Apenas navega para a tela do mural sem logar (útil para desenvolvimento/teste da tela mural) */}
           {/* Este botão pode ser removido em produção */}

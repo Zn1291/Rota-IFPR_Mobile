@@ -12,10 +12,10 @@
       "supportsTablet": true
     },
     "android": {
-      "package": "com.rotaifpr.mobile",
+      "package": "com.googleauth.android.rotaifpr",
       "googleServicesFile": ".googleServicesFile.json",
       "adaptiveIcon": {
-        "foregroundImage": "/assets/images/adaptive-icon.png",
+        "foregroundImage": "./assets/images/adaptiveicon.png",
         "backgroundColor": "#ffffff"
       }
     },
@@ -25,6 +25,7 @@
       "favicon": "/assets/images/favicon.png"
     },
     "plugins": [
+      "@react-native-google-signin/google-signin",
       "expo-router",
       [
         "expo-splash-screen",
