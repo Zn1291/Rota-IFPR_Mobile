@@ -1,11 +1,22 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, TextInput, Alert, Button } from 'react-native';
+import {
+  View, Text, StyleSheet, ScrollView, TouchableOpacity,
+  Image, TextInput, Alert
+} from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { Header } from '@/components/Header';
 import { router } from 'expo-router';
-import { collection, query, where, orderBy, onSnapshot, updateDoc, arrayUnion, arrayRemove, doc, addDoc, getDocs } from 'firebase/firestore';
+import {
+  collection, query, where, orderBy, onSnapshot,
+  updateDoc, arrayUnion, arrayRemove, doc,
+  addDoc, getDocs
+} from 'firebase/firestore';
 import { db } from './firebase';
 import { getAuth } from 'firebase/auth';
+
+import * as ImagePicker from 'expo-image-picker';
+import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { storage } from './firebase';
 
 interface Mensagem {
   id: string;
@@ -100,6 +111,61 @@ export default function LoginMural() {
     }
   };
 
+  const enviarImagem = async (origem: 'camera' | 'galeria') => {
+  const authUser = getAuth().currentUser;
+  if (!authUser) {
+    Alert.alert("Erro", "Usuário não autenticado.");
+    return;
+  }
+
+  const pickerFunction = origem === 'camera'
+    ? ImagePicker.launchCameraAsync
+    : ImagePicker.launchImageLibraryAsync;
+
+  const result = await pickerFunction({
+    mediaTypes: ImagePicker.MediaTypeOptions.Images, // não precisa array aqui
+    allowsEditing: false,
+    quality: 1,
+  });
+
+  console.log("Resultado do picker:", result);
+
+  if (!result.canceled && result.assets && result.assets[0]?.uri) {
+  const imageUri = result.assets[0].uri;
+  // prossegue com upload
+  } else {
+    Alert.alert("Nenhuma imagem selecionada.");
+  }
+a
+  if (!result.canceled && result.assets && result.assets[0]?.uri) {
+    const imageUri = result.assets[0].uri;
+
+    try {
+      const response = await fetch(imageUri);
+      const blob = await response.blob();
+
+      const fileName = `fotos/${Date.now()}_${authUser.uid}.jpg`;
+      const storageRef = ref(storage, fileName);
+
+      await uploadBytes(storageRef, blob);
+      const downloadURL = await getDownloadURL(storageRef);
+
+      await addDoc(collection(db, "mensagens"), {
+        usuarioEmail: authUser.email,
+        usuarioNome: authUser.displayName || 'Usuário',
+        usuarioFoto: authUser.photoURL || '',
+        mensagem: downloadURL,
+        dataCriacao: new Date(),
+        fixadoPor: [],
+      });
+    } catch (error: any) {
+      Alert.alert("Erro ao enviar imagem", error.message);
+    }
+  } else {
+    Alert.alert("Nenhuma imagem selecionada.");
+  }
+};
+
   const renderBotaoFiltro = (label: string, tipo: Filtro) => (
     <TouchableOpacity
       style={[styles.botao, filtroSelecionado === tipo && styles.botaoAtivo]}
@@ -141,8 +207,8 @@ export default function LoginMural() {
   }
 
   useEffect(() => {
-  atualizarMensagensAntigas();
-}, []);
+    atualizarMensagensAntigas();
+  }, []);
 
   return (
     <ScrollView>
@@ -174,39 +240,60 @@ export default function LoginMural() {
         <View style={{ padding: 10 }}>
           {mensagens.map((msg) => {
             const estaFixado = msg.fixadoPor?.includes(userEmail);
+            const ehImagem = msg.mensagem.startsWith('http') && msg.mensagem.includes('firebase');
+
             return (
               <View key={msg.id} style={styles.cartaoMensagem}>
-              <View style={styles.cabecalhoMensagem}>
-                <View style={styles.usuarioInfo}>
-                  <Image
-                    source={{ uri: msg.usuarioFoto || 'https://via.placeholder.com/30' }}
-                    style={styles.fotoUsuario}
-                  />
-                  <Text style={styles.nomeUsuario}>
-                    {msg.usuarioNome || msg.usuarioEmail}
-                  </Text>
+                <View style={styles.cabecalhoMensagem}>
+                  <View style={styles.usuarioInfo}>
+                    <Image
+                      source={{ uri: msg.usuarioFoto || 'https://via.placeholder.com/30' }}
+                      style={styles.fotoUsuario}
+                    />
+                    <Text style={styles.nomeUsuario}>
+                      {msg.usuarioNome || msg.usuarioEmail}
+                    </Text>
+                  </View>
+                  <TouchableOpacity onPress={() => alternarFixado(msg)}>
+                    <Ionicons name={estaFixado ? "star" : "star-outline"} size={24} color="gold" />
+                  </TouchableOpacity>
                 </View>
-                <TouchableOpacity onPress={() => alternarFixado(msg)}>
-                  <Ionicons name={estaFixado ? "star" : "star-outline"} size={24} color="gold" />
-                </TouchableOpacity>
-              </View>
-              <Text style={styles.textoMensagem}>{msg.mensagem}</Text>
-              <Text style={styles.dataMensagem}>
-                {new Date(msg.dataCriacao.seconds * 1000).toLocaleString()}
-              </Text>
-            </View>
-            );
-        })}
-      </View>
-    </ScrollView>
 
-      <TextInput
-        placeholder="Escreva sua mensagem"
-        value={novaMensagem}
-        onChangeText={setNovaMensagem}
-        style={{ borderWidth: 1, margin: 10, padding: 8 }}
-      />
-      <Button title="Enviar" onPress={enviarMensagem} />
+                {ehImagem ? (
+                  <Image source={{ uri: msg.mensagem }} style={{ width: 250, height: 200, borderRadius: 8, marginTop: 10 }} />
+                ) : (
+                  <Text style={styles.textoMensagem}>{msg.mensagem}</Text>
+                )}
+
+                <Text style={styles.dataMensagem}>
+                  {new Date(msg.dataCriacao.seconds * 1000).toLocaleString()}
+                </Text>
+              </View>
+            );
+          })}
+        </View>
+      </ScrollView>
+
+      <View style={styles.inputContainer}>
+        <TextInput
+          style={styles.input}
+          placeholder="Escreva sua mensagem"
+          value={novaMensagem}
+          onChangeText={setNovaMensagem}
+        />
+
+        <TouchableOpacity style={styles.sendButton} onPress={enviarMensagem}>
+          <Text style={styles.sendButtonText}>📤</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.photoButton} onPress={() => enviarImagem('galeria')}>
+          <Text style={styles.sendButtonText}>🖼️</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.photoButton} onPress={() => enviarImagem('camera')}>
+          <Text style={styles.sendButtonText}>📷</Text>
+        </TouchableOpacity>
+      </View>
 
       <View style={styles.rodape} />
     </ScrollView>
@@ -277,51 +364,82 @@ const styles = StyleSheet.create({
     backgroundColor: "red",
     marginHorizontal: 1,
   },
-
   mensagensContainer: {
-  flex: 1,
-},
-cartaoMensagem: {
-  backgroundColor: '#fff',
-  padding: 12,
-  borderRadius: 10,
-  marginBottom: 10,
-  marginHorizontal: 10,
-  shadowColor: '#000',
-  shadowOffset: { width: 0, height: 2 },
-  shadowOpacity: 0.2,
-  shadowRadius: 3,
-  elevation: 3,
-},
-cabecalhoMensagem: {
-  flexDirection: 'row',
-  justifyContent: 'space-between',
-  alignItems: 'center',
-},
-usuarioInfo: {
-  flexDirection: 'row',
-  alignItems: 'center',
-},
-fotoUsuario: {
-  width: 35,
-  height: 35,
-  borderRadius: 17.5,
-  marginRight: 10,
-},
-nomeUsuario: {
-  fontWeight: 'bold',
-  fontSize: 16,
-},
-textoMensagem: {
-  marginTop: 6,
-  fontSize: 15,
-  color: '#333',
-},
-dataMensagem: {
-  marginTop: 4,
-  fontSize: 12,
-  color: 'gray',
-  textAlign: 'right',
-},
-
+    flex: 1,
+  },
+  cartaoMensagem: {
+    backgroundColor: '#fff',
+    padding: 12,
+    borderRadius: 10,
+    marginBottom: 10,
+    marginHorizontal: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 3,
+    elevation: 3,
+  },
+  cabecalhoMensagem: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  usuarioInfo: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  fotoUsuario: {
+    width: 35,
+    height: 35,
+    borderRadius: 17.5,
+    marginRight: 10,
+  },
+  nomeUsuario: {
+    fontWeight: 'bold',
+    fontSize: 16,
+  },
+  textoMensagem: {
+    marginTop: 6,
+    fontSize: 15,
+    color: '#333',
+  },
+  dataMensagem: {
+    marginTop: 4,
+    fontSize: 12,
+    color: 'gray',
+    textAlign: 'right',
+  },
+  inputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 10,
+    borderTopWidth: 1,
+    borderColor: '#ccc',
+  },
+  input: {
+    flex: 1,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 20,
+    paddingHorizontal: 15,
+    paddingVertical: 8,
+    marginRight: 8,
+    backgroundColor: '#fff',
+  },
+  sendButton: {
+    backgroundColor: '#2196F3',
+    padding: 10,
+    borderRadius: 20,
+    marginRight: 5,
+  },
+  photoButton: {
+    backgroundColor: '#4CAF50',
+    padding: 10,
+    borderRadius: 20,
+    marginLeft: 3,
+  },
+  sendButtonText: {
+    color: 'white',
+    fontWeight: 'bold',
+  },
 });
