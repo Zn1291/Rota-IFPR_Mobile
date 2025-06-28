@@ -36,7 +36,7 @@ export default function Index() {
               </Text>
 
               <View style={estilos.section}>
-              <TouchableOpacity onPress={() => router.push("/")}>
+              <TouchableOpacity onPress={() => router.push("/queroseraluno")}>
               <View style={estilos.Botoes}>
               <Image source={require("../assets/images/PáginaInicial/quero-ser.png")} style={estilos.imagembotoes}/> 
               <Text style={estilos.Botoestexto}>Quero Ser Aluno</Text>

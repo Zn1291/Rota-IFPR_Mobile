@@ -1,22 +1,15 @@
-import React, { useEffect, useState } from 'react';
-import {
-  View, Text, StyleSheet, ScrollView, TouchableOpacity,
-  Image, TextInput, Alert
-} from 'react-native';
+import React, { useEffect, useState, useRef } from 'react';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, TextInput, Alert, Modal } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { Header } from '@/components/Header';
 import { router } from 'expo-router';
-import {
-  collection, query, where, orderBy, onSnapshot,
-  updateDoc, arrayUnion, arrayRemove, doc,
-  addDoc, getDocs
-} from 'firebase/firestore';
+import { collection, query, where, orderBy, onSnapshot, updateDoc, arrayUnion, arrayRemove, doc, addDoc, getDocs } from 'firebase/firestore';
 import { db } from './firebase';
 import { getAuth } from 'firebase/auth';
-
+import { Camera, CameraView } from 'expo-camera';
+import type { CameraType } from 'expo-camera';
 import * as ImagePicker from 'expo-image-picker';
-import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { storage } from './firebase';
+import { uploadImageToCloudinary } from './cloudinary';
 
 interface Mensagem {
   id: string;
@@ -26,6 +19,7 @@ interface Mensagem {
   mensagem: string;
   dataCriacao: { seconds: number; nanoseconds: number };
   fixadoPor?: string[];
+  tipo?: 'texto' | 'imagem';
 }
 
 type Filtro = 'recentes' | 'antigas' | 'fixadas';
@@ -34,12 +28,15 @@ export default function LoginMural() {
   const auth = getAuth();
   const user = auth.currentUser;
   const userEmail = user?.email || '';
-  const userNome = user?.displayName || 'Usuário';
   const userFoto = user?.photoURL || '';
 
   const [mensagens, setMensagens] = useState<Mensagem[]>([]);
   const [novaMensagem, setNovaMensagem] = useState('');
   const [filtroSelecionado, setFiltroSelecionado] = useState<Filtro>('recentes');
+  const [modalCameraVisivel, setModalCameraVisivel] = useState(false);
+  const [temPermissao, setTemPermissao] = useState<boolean | null>(null);
+  const cameraRef = useRef<CameraView | null>(null);
+  const [cameraType] = useState<CameraType>('back');
 
   useEffect(() => {
     let q;
@@ -68,6 +65,13 @@ export default function LoginMural() {
     return () => unsubscribe();
   }, [filtroSelecionado, userEmail]);
 
+  useEffect(() => {
+    (async () => {
+      const { status } = await Camera.requestCameraPermissionsAsync();
+      setTemPermissao(status === 'granted');
+    })();
+  }, []);
+
   const enviarMensagem = async () => {
     const authUser = getAuth().currentUser;
 
@@ -82,11 +86,18 @@ export default function LoginMural() {
     }
 
     try {
+      console.log('Enviando mensagem com dados do usuário:', {
+        email: authUser.email,
+        nome: authUser.displayName,
+        foto: authUser.photoURL
+      });
+
       await addDoc(collection(db, "mensagens"), {
         usuarioEmail: authUser.email,
-        usuarioNome: authUser.displayName || 'Usuário',
+        usuarioNome: authUser.displayName || authUser.email?.split('@')[0] || '',
         usuarioFoto: authUser.photoURL || '',
         mensagem: novaMensagem,
+        tipo: 'texto',
         dataCriacao: new Date(),
         fixadoPor: [],
       });
@@ -111,60 +122,87 @@ export default function LoginMural() {
     }
   };
 
-  const enviarImagem = async (origem: 'camera' | 'galeria') => {
-  const authUser = getAuth().currentUser;
-  if (!authUser) {
-    Alert.alert("Erro", "Usuário não autenticado.");
-    return;
-  }
-
-  const pickerFunction = origem === 'camera'
-    ? ImagePicker.launchCameraAsync
-    : ImagePicker.launchImageLibraryAsync;
-
-  const result = await pickerFunction({
-    mediaTypes: ImagePicker.MediaTypeOptions.Images, // não precisa array aqui
-    allowsEditing: false,
-    quality: 1,
-  });
-
-  console.log("Resultado do picker:", result);
-
-  if (!result.canceled && result.assets && result.assets[0]?.uri) {
-  const imageUri = result.assets[0].uri;
-  // prossegue com upload
-  } else {
-    Alert.alert("Nenhuma imagem selecionada.");
-  }
-a
-  if (!result.canceled && result.assets && result.assets[0]?.uri) {
-    const imageUri = result.assets[0].uri;
-
+  const enviarImagemParaCloudinary = async (imageUri: string) => {
+    const authUser = getAuth().currentUser;
+    if (!authUser) {
+      Alert.alert("Erro", "Usuário não autenticado.");
+      return;
+    }
+    
     try {
-      const response = await fetch(imageUri);
-      const blob = await response.blob();
-
-      const fileName = `fotos/${Date.now()}_${authUser.uid}.jpg`;
-      const storageRef = ref(storage, fileName);
-
-      await uploadBytes(storageRef, blob);
-      const downloadURL = await getDownloadURL(storageRef);
-
+      console.log('Iniciando upload da imagem para Cloudinary:', imageUri);
+      console.log('Dados do usuário:', {
+        email: authUser.email,
+        nome: authUser.displayName,
+        foto: authUser.photoURL
+      });
+      
+      const downloadURL = await uploadImageToCloudinary(imageUri);
+      console.log('Upload para Cloudinary concluído:', downloadURL);
+      
       await addDoc(collection(db, "mensagens"), {
         usuarioEmail: authUser.email,
-        usuarioNome: authUser.displayName || 'Usuário',
+        usuarioNome: authUser.displayName || authUser.email?.split('@')[0] || '',
         usuarioFoto: authUser.photoURL || '',
         mensagem: downloadURL,
+        tipo: 'imagem',
         dataCriacao: new Date(),
         fixadoPor: [],
       });
+      console.log('Mensagem salva no Firestore');
+      
     } catch (error: any) {
-      Alert.alert("Erro ao enviar imagem", error.message);
+      console.error('Erro detalhado no upload:', error);
+      Alert.alert("Erro ao enviar imagem", `Erro: ${error.message}`);
     }
-  } else {
-    Alert.alert("Nenhuma imagem selecionada.");
-  }
-};
+  };
+
+  const tirarFoto = async () => {
+    if (cameraRef.current) {
+      try {
+        console.log('Iniciando captura de foto...');
+        const foto = await cameraRef.current.takePictureAsync({ 
+          quality: 0.8,
+          base64: false,
+          exif: false
+        });
+        console.log('Foto capturada:', foto);
+        setModalCameraVisivel(false);
+        
+        if (foto && foto.uri) {
+          console.log('URI da foto:', foto.uri);
+          await enviarImagemParaCloudinary(foto.uri);
+        } else {
+          Alert.alert('Erro ao tirar foto', 'Nenhuma foto capturada.');
+        }
+      } catch (error: any) {
+        console.error('Erro detalhado:', error);
+        Alert.alert('Erro ao tirar foto', `Erro: ${error.message}`);
+      }
+    } else {
+      Alert.alert('Erro', 'Câmera não está disponível');
+    }
+  };
+
+  const selecionarImagem = async () => {
+    try {
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: false,
+        quality: 0.8,
+      });
+
+      if (!result.canceled && result.assets && result.assets[0]?.uri) {
+        console.log('Imagem selecionada:', result.assets[0].uri);
+        await enviarImagemParaCloudinary(result.assets[0].uri);
+      } else {
+        Alert.alert("Nenhuma imagem selecionada.");
+      }
+    } catch (error: any) {
+      console.error('Erro ao selecionar imagem:', error);
+      Alert.alert("Erro ao selecionar imagem", error.message);
+    }
+  };
 
   const renderBotaoFiltro = (label: string, tipo: Filtro) => (
     <TouchableOpacity
@@ -190,14 +228,15 @@ a
     const atualizacoes = snapshot.docs.map(async (documento) => {
       const dados = documento.data();
 
-      const precisaAtualizar = !dados.usuarioNome || !dados.usuarioFoto;
+      const precisaAtualizar = !dados.usuarioNome || !dados.usuarioFoto || !dados.tipo;
       const eDoUsuarioAtual = dados.usuarioEmail === user.email;
 
       if (precisaAtualizar && eDoUsuarioAtual) {
         const ref = doc(db, "mensagens", documento.id);
         return updateDoc(ref, {
-          usuarioNome: user.displayName || "Usuário",
+          usuarioNome: user.displayName || user.email?.split('@')[0] || '',
           usuarioFoto: user.photoURL || "",
+          tipo: dados.tipo || (dados.mensagem.startsWith('http') ? 'imagem' : 'texto'),
         });
       }
     });
@@ -211,47 +250,43 @@ a
   }, []);
 
   return (
-    <ScrollView>
-      <Header />
-      <View style={styles.linhaVermelha} />
-      <View style={styles.banner}>
-        <Image source={require("../assets/images/faixacinza.png")} style={styles.bannerimg} />
-        <Text style={styles.bannerText}>Mural dos Estudantes</Text>
-      </View>
+    <View style={styles.container}>
+      <View style={styles.headerFixo}>
+        <Header />
+        <View style={styles.linhaVermelha} />
+        <View style={styles.banner}>
+          <Image source={require("../assets/images/faixacinza.png")} style={styles.bannerimg} />
+          <Text style={styles.bannerText}>Mural dos Estudantes</Text>
+        </View>
 
-      <View style={styles.informativo}>
-        <View style={styles.botoes}>
-          <TouchableOpacity>
-            <Text style={styles.botoestexto}> Meus dados</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => router.push("/murallogin")}>
-            <Text style={styles.botoestexto}> Sair do Mural</Text>
-          </TouchableOpacity>
+        <View style={styles.informativo}>
+          <View style={styles.botoes}>
+            <TouchableOpacity onPress={() => router.push("/murallogin")}>
+              <Text style={styles.botoestexto}> Sair do Mural</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        <View style={styles.section}>
+          {renderBotaoFiltro('Mais recentes', 'recentes')}
+          {renderBotaoFiltro('Mais antigas', 'antigas')}
+          {renderBotaoFiltro('Fixadas', 'fixadas')}
         </View>
       </View>
 
-      <View style={styles.section}>
-        {renderBotaoFiltro('Mais recentes', 'recentes')}
-        {renderBotaoFiltro('Mais antigas', 'antigas')}
-        {renderBotaoFiltro('Fixadas', 'fixadas')}
-      </View>
-
-      <ScrollView style={styles.mensagensContainer}>
-        <View style={{ padding: 10 }}>
+      <ScrollView style={styles.scrollContainer}>
+        <View style={styles.mensagensWrapper}>
           {mensagens.map((msg) => {
             const estaFixado = msg.fixadoPor?.includes(userEmail);
-            const ehImagem = msg.mensagem.startsWith('http') && msg.mensagem.includes('firebase');
-
+            const ehImagem = msg.tipo === 'imagem' || 
+              (msg.mensagem && msg.mensagem.includes('cloudinary.com'));
+            
             return (
               <View key={msg.id} style={styles.cartaoMensagem}>
                 <View style={styles.cabecalhoMensagem}>
                   <View style={styles.usuarioInfo}>
-                    <Image
-                      source={{ uri: msg.usuarioFoto || 'https://via.placeholder.com/30' }}
-                      style={styles.fotoUsuario}
-                    />
-                    <Text style={styles.nomeUsuario}>
-                      {msg.usuarioNome || msg.usuarioEmail}
+                    <Text style={styles.emailUsuario}>
+                      {msg.usuarioEmail}
                     </Text>
                   </View>
                   <TouchableOpacity onPress={() => alternarFixado(msg)}>
@@ -260,7 +295,22 @@ a
                 </View>
 
                 {ehImagem ? (
-                  <Image source={{ uri: msg.mensagem }} style={{ width: 250, height: 200, borderRadius: 8, marginTop: 10 }} />
+                  <View style={styles.containerImagem}>
+                    <Image 
+                      source={{ 
+                        uri: msg.mensagem,
+                        headers: {
+                          'Accept': 'image/*',
+                        },
+                      }} 
+                      style={styles.imagemMensagem}
+                      resizeMode="contain"
+                      onError={(error) => {
+                        console.warn('Erro ao carregar imagem:', msg.mensagem, error);
+                      }}
+                      onLoad={() => console.log('Imagem carregada com sucesso:', msg.mensagem)}
+                    />
+                  </View>
                 ) : (
                   <Text style={styles.textoMensagem}>{msg.mensagem}</Text>
                 )}
@@ -283,24 +333,57 @@ a
         />
 
         <TouchableOpacity style={styles.sendButton} onPress={enviarMensagem}>
-          <Text style={styles.sendButtonText}>📤</Text>
+          <Text style={styles.sendButtonText}>➔</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.photoButton} onPress={() => enviarImagem('galeria')}>
-          <Text style={styles.sendButtonText}>🖼️</Text>
+        <TouchableOpacity style={styles.photoButton} onPress={selecionarImagem}>
+          <Text style={styles.sendButtonText}>📄</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.photoButton} onPress={() => enviarImagem('camera')}>
+        <TouchableOpacity style={styles.photoButton} onPress={() => setModalCameraVisivel(true)}>
           <Text style={styles.sendButtonText}>📷</Text>
         </TouchableOpacity>
       </View>
 
+      <Modal visible={modalCameraVisivel} animationType="slide">
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'black' }}>
+          {temPermissao === null ? (
+            <Text>Solicitando permissão para usar a câmera...</Text>
+          ) : temPermissao === false ? (
+            <Text>Permissão para câmera negada.</Text>
+          ) : (
+            <CameraView
+              style={{ width: '100%', height: '80%' }}
+              facing={cameraType}
+              ref={cameraRef}
+            />
+          )}
+          <TouchableOpacity style={{ marginTop: 20, backgroundColor: '#2196F3', padding: 15, borderRadius: 10 }} onPress={tirarFoto}>
+            <Text style={{ color: 'white', fontWeight: 'bold' }}>Tirar Foto</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={{ marginTop: 10 }} onPress={() => setModalCameraVisivel(false)}>
+            <Text style={{ color: 'white' }}>Cancelar</Text>
+          </TouchableOpacity>
+        </View>
+      </Modal>
+
       <View style={styles.rodape} />
-    </ScrollView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#f5f5f5',
+  },
+  headerFixo: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    zIndex: 100,
+  },
   banner: { height: 87 },
   bannerimg: { width: 415, height: 89 },
   bannerText: {
@@ -322,7 +405,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     flexWrap: "wrap",
     flex: 1,
-    alignSelf: "center",
+    alignSelf: "flex-end",
   },
   botoestexto: {
     fontSize: 24,
@@ -332,12 +415,13 @@ const styles = StyleSheet.create({
   },
   section: {
     flexDirection: "row",
-    flexWrap: "wrap",
-    flex: 1,
-    borderWidth: 1,
-    borderColor: "lightgray",
-    paddingVertical: 10,
-    justifyContent: 'center',
+    justifyContent: "center",
+    alignItems: "center",
+    paddingVertical: 5,
+    backgroundColor: "#fff",
+    borderTopWidth: 1,
+    borderBottomWidth: 1,
+    borderColor: "#ddd",
   },
   botao: {
     marginHorizontal: 5,
@@ -355,7 +439,7 @@ const styles = StyleSheet.create({
     color: "white",
   },
   rodape: {
-    marginTop: 50,
+    marginTop: 10,
     backgroundColor: "#009F48",
     padding: 30,
   },
@@ -364,8 +448,14 @@ const styles = StyleSheet.create({
     backgroundColor: "red",
     marginHorizontal: 1,
   },
-  mensagensContainer: {
+  scrollContainer: {
     flex: 1,
+    marginTop: 280,
+    paddingBottom: 100,
+  },
+  mensagensWrapper: {
+    padding: 10,
+    paddingBottom: 20,
   },
   cartaoMensagem: {
     backgroundColor: '#fff',
@@ -387,16 +477,29 @@ const styles = StyleSheet.create({
   usuarioInfo: {
     flexDirection: 'row',
     alignItems: 'center',
+    flex: 1,
   },
   fotoUsuario: {
-    width: 35,
-    height: 35,
-    borderRadius: 17.5,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
     marginRight: 10,
+    borderWidth: 1,
+    borderColor: '#ddd',
+  },
+  infoUsuario: {
+    flexDirection: 'column',
+    flex: 1,
   },
   nomeUsuario: {
     fontWeight: 'bold',
     fontSize: 16,
+    color: '#333',
+  },
+  emailUsuario: {
+    fontSize: 14,
+    color: '#666',
+    fontWeight: '500',
   },
   textoMensagem: {
     marginTop: 6,
@@ -415,6 +518,17 @@ const styles = StyleSheet.create({
     padding: 10,
     borderTopWidth: 1,
     borderColor: '#ccc',
+    backgroundColor: '#fff',
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    zIndex: 50,
+    elevation: 5,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: -2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
   },
   input: {
     flex: 1,
@@ -427,13 +541,13 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   sendButton: {
-    backgroundColor: '#2196F3',
+    backgroundColor: '#333',
     padding: 10,
     borderRadius: 20,
     marginRight: 5,
   },
   photoButton: {
-    backgroundColor: '#4CAF50',
+    backgroundColor: '#333',
     padding: 10,
     borderRadius: 20,
     marginLeft: 3,
@@ -441,5 +555,16 @@ const styles = StyleSheet.create({
   sendButtonText: {
     color: 'white',
     fontWeight: 'bold',
+  },
+  imagemMensagem: {
+    width: 250,
+    height: 200,
+    borderRadius: 8,
+    marginTop: 10,
+    backgroundColor: '#f0f0f0',
+  },
+  containerImagem: {
+    marginTop: 10,
+    alignItems: 'center',
   },
 });

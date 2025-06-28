@@ -117,7 +117,8 @@ export default function LoginMural() {
 
           {/* Link "Esqueci minha Senha" */}
           <TouchableOpacity onPress={() => router.push("/redefinirsenhamural")}>
-            <Text style={styles.descsenha}>Esqueci minha Senha</Text>
+            <Text style={styles.descsenha}>Esqueceu sua senha?</Text>
+            <Text style={styles.descsenha}>Precisa cadastar uma conta?</Text>
           </TouchableOpacity>
 
           {/* Botão principal "Entrar" que CHAMA A LÓGICA DE LOGIN COM FIREBASE */}
@@ -127,9 +128,6 @@ export default function LoginMural() {
 
           {/* Botão BETA - Apenas navega para a tela do mural sem logar (útil para desenvolvimento/teste da tela mural) */}
           {/* Este botão pode ser removido em produção */}
-          <TouchableOpacity style={styles.botao} onPress={() => router.push("/muraldosestudantes")}>
-            <Text style={styles.textobotao}>[BETA - ACESSAR MURAL] </Text>
-          </TouchableOpacity>
         </View>
       </View>
       {/* --- FIM DA SEÇÃO DO FORMULÁRIO DE LOGIN COM FIREBASE --- */}
@@ -226,7 +224,7 @@ const styles = StyleSheet.create({
   },
 
   senhaicon:{
-    marginTop: -45, // Ajuste para posicionar o ícone sobre o campo de senha
+    marginTop: -40, // Ajuste para posicionar o ícone sobre o campo de senha
     marginRight: 20, // Espaçamento da direita
     alignSelf: 'flex-end', // Alinha o ícone à direita
     zIndex: 1, // Garante que o ícone fique sobre o campo de texto
@@ -260,7 +258,7 @@ const styles = StyleSheet.create({
 
   // Estilos do Rodapé
   rodape:{
-    marginTop: 30, // Espaço entre a última seção e o rodapé
+    marginTop: 100, // Espaço entre a última seção e o rodapé
     backgroundColor: "#009F48",
     padding: 40, // Aumentado o padding
   },

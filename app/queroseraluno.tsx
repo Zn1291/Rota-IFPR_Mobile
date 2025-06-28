@@ -191,6 +191,7 @@ const styles = StyleSheet.create({
   },
   
   rodape:{
+    marginTop: 10,
     backgroundColor: "#009F48",
     padding: 30,
   },
@@ -199,5 +200,19 @@ const styles = StyleSheet.create({
     height: 2,
     backgroundColor: "red",
     marginHorizontal: 1,
+  },
+
+  link: {
+    backgroundColor: '#009F48',
+    padding: 10,
+    borderRadius: 8,
+    marginVertical: 5,
+    alignItems: 'center',
+  },
+
+  linkText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });

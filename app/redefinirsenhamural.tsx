@@ -29,18 +29,12 @@ export default function LoginMural() {
 
         <View style={styles.informativo}>
           <View>
-          <Text style={styles.redefinirTitulo}> O Rota IFPR utiliza a mesma senha da conta google.</Text>
-          <Text style={styles.redefinirtexto}> Como o Rota utiliza a mesma senha do email Estudantil do IFPR, caso você tenha esquecido sua senha você pode redefinir direto na página de login do Google.</Text>
-          <Text style={styles.redefinirtexto}>Precisa redefinir sua senha do google?</Text>
-          <TouchableOpacity onPress={() => Linking.openURL("https://accounts.google.com/v3/signin/identifier?authuser=0&continue=https%3A%2F%2Fmyaccount.google.com%2F%3Futm_source%3Dsign_in_no_continue%26pli%3D1&ec=GAlAwAE&hl=pt_BR&service=accountsettings&flowName=GlifWebSignIn&flowEntry=AddSession&dsh=S722285033%3A1746577450544442")}>
-            <Text style={styles.botaogoogle}>Clique Aqui</Text>  
-          </TouchableOpacity>
+          <Text style={styles.redefinirTitulo}> Esqueceu sua senha?</Text>
+          <Text style={styles.redefinirtexto}> Nos encaminhe um email para contatorotaifor@gmail.com contendo seu email de acesso, seu número de matrícula que sua senha será redefinida e repassado por email após validação</Text>
+          <Text style={styles.redefinirTitulo}> Não tem Cadastro?</Text>
+          <Text style={styles.redefinirtexto}> Nos encaminhe um email para mailto:contatorotaifor@gmail.com contendo seu nome completo, email que utiliza ou pretende utilizar, seu número de matrícula e CPF que seu usuário será criado e repassado por email após validado seu vinculo estudantil com o IFPR.</Text>
+          <Text style={styles.redefinirtexto}>CASO QUEIRA, SEU EMAIL CADASTRADO PODERÁ SER O EMAIL INSTITUCIONAL, SE NÃO SOUBER COMO ACESSAR VEJA ABAIXO:</Text>       
           </View>
-          <Image source={require("../assets/images/senhagoogle.png")} style={styles.imagem}/>
-          <Text style={styles.redefinirtexto}>Após redefinir sua senha clique no botão abaixo para voltar a tela de login e acessar o Mural dos Estudantes</Text>
-          <TouchableOpacity onPress={() => router.push("/murallogin")}>
-          <Text style={styles.botao}>Fazer Login</Text>
-          </TouchableOpacity>
         </View>
         <View style={styles.firstacess}>
         <Text style={styles.redefinirTitulo}> Não sabe qual é seu email Institucional?</Text>
