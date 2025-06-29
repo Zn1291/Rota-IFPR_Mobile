@@ -1,32 +1,39 @@
+import React, { useState } from "react";
 import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
 import { Menu } from "./Menu";
-import { useState } from "react";
 import { router } from "expo-router";
+import Ionicons from '@expo/vector-icons/Ionicons';
+import { SafeAreaView } from 'react-native-safe-area-context';
+
+const HEADER_HEIGHT = 80;
 
 const estilos = StyleSheet.create({
-  estiloHeader: {
+  headerContainer: {
+    width: '100%',
     backgroundColor: "#fff",
-    padding: 10,
+    zIndex: 100,
+    elevation: 10,
+  },
+  estiloHeader: {
+    height: HEADER_HEIGHT,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    flexWrap: "wrap",
+    paddingHorizontal: 10,
+    borderBottomWidth: 0,
   },
-
   logoifprInicial: {
-    width: 250,
-    height: 95,
+    width: 200,
+    height: 90,
+    resizeMode: "contain",
   },
-
-  bar: {
-    width: 25,
-    height: 3,
-    backgroundColor: "#333",
-    marginVertical: 2,
-  },
-
   menuIcone: {
     padding: 10,
+  },
+  linhaVermelha: {
+    height: 3,
+    backgroundColor: "red",
+    width: '100%',
   },
 });
 
@@ -38,19 +45,20 @@ export const Header = () => {
   };
   return (
     <>
-      <View style={estilos.estiloHeader}>
-        <TouchableOpacity onPress={() => router.push("/")}>
-        <Image
-          source={require("../assets/images/PáginaInicial/IFPR_PINHAIS.png")}
-          style={estilos.logoifprInicial}
-        />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={toggleMenu} style={estilos.menuIcone}>
-          <View style={estilos.bar} />
-          <View style={estilos.bar} />
-          <View style={estilos.bar} />
-        </TouchableOpacity>
-      </View>
+      <SafeAreaView style={estilos.headerContainer} edges={['top', 'left', 'right']}>
+        <View style={estilos.estiloHeader}>
+          <TouchableOpacity onPress={() => router.push("/")}>
+            <Image
+              source={require("../assets/images/PáginaInicial/IFPR_PINHAIS.png")}
+              style={estilos.logoifprInicial}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={toggleMenu} style={estilos.menuIcone}>
+            <Ionicons name="menu-outline" size={32} color="#333" />
+          </TouchableOpacity>
+        </View>
+        <View style={estilos.linhaVermelha} />
+      </SafeAreaView>
       {menuVisible && <Menu onClose={toggleMenu} />}
     </>
   );

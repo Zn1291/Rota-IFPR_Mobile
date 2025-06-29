@@ -1,44 +1,49 @@
-import {
-  Linking,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-  Image,
-} from "react-native";
-import AntDesign from "@expo/vector-icons/AntDesign";
+import React from "react";
+import { Linking, StyleSheet, Text, TouchableOpacity, View, Image, Dimensions } from "react-native";
+import Ionicons from "@expo/vector-icons/Ionicons";
 import {router} from 'expo-router';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 
+const HEADER_HEIGHT = 83;
 
 export const Menu = (props: { onClose: () => void }) => {
+  const insets = useSafeAreaInsets();
+  const screenWidth = Dimensions.get('window').width;
+
   return (
     <>
-      <View style={estilos.menuLateral}>
-        <TouchableOpacity style={estilos.close} onPress={props.onClose}>
-          <AntDesign name="closecircleo" size={36} color="black" />
-        </TouchableOpacity>
-        <View style={estilos.linha}/>
+      <TouchableOpacity
+        style={[estilos.overlay, { top: HEADER_HEIGHT }]}
+        activeOpacity={1}
+        onPress={props.onClose}
+      />
+      <SafeAreaView style={[estilos.menuLateral, { top: HEADER_HEIGHT }]}>
         <View style={estilos.menuItensContainer}>
-          <TouchableOpacity onPress={() => router.push("/sou_aluno")} style={estilos.menuItem}>
+          <TouchableOpacity onPress={() => router.push("/sou_aluno")} style={[estilos.menuItem]}>
             <Text style={estilos.menuPrincipal}>Sou Aluno</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={() => router.push("/murallogin")} style={estilos.menuItem}>
+            <Ionicons name="chatbubbles-outline" size={20} color="#009F48" style={estilos.iconeAluno} />
             <Text style={estilos.menuTexto}>Mural dos Estudantes </Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={() => router.push("/manualdoaluno")} style={estilos.menuItem}>
+            <Ionicons name="book-outline" size={20} color="#009F48" style={estilos.iconeAluno} />
             <Text style={estilos.menuTexto}>Manual do Aluno</Text>
           </TouchableOpacity >
           <TouchableOpacity onPress={() => router.push("/plataformaserecursos")} style={estilos.menuItem}>
+            <Ionicons name="laptop-outline" size={20} color="#009F48" style={estilos.iconeAluno} />
             <Text style={estilos.menuTexto}>Plataformas</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={() => router.push("/bibliotecas")} style={estilos.menuItem}>
+            <Ionicons name="library-outline" size={20} color="#009F48" style={estilos.iconeAluno} />
             <Text style={estilos.menuTexto}>Bibliotecas</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={() => router.push("/emailseatendimento")} style={estilos.menuItem}>
+            <Ionicons name="mail-outline" size={20} color="#009F48" style={estilos.iconeAluno} />
             <Text style={estilos.menuTexto}>Atendimento</Text>
           </TouchableOpacity>
           <View style={estilos.linha}/>
-          <TouchableOpacity onPress={() => router.push("/queroseraluno")} style={estilos.menuItem}>
+          <TouchableOpacity onPress={() => router.push("/queroseraluno")} style={[estilos.menuItem]}>
             <Text style={estilos.menuPrincipal}>Quero Ser Aluno</Text>
           </TouchableOpacity>
           <View style={estilos.linha}/>
@@ -46,93 +51,112 @@ export const Menu = (props: { onClose: () => void }) => {
             <Text style={estilos.menuPrincipal}>Contato</Text>
           </TouchableOpacity>
           <View style={estilos.linha}/>
+          <View style={{ flex: 1 }} />
         </View>
 
         <View style={estilos.footer}>
-        <TouchableOpacity onPress={() => Linking.openURL("https://www.instagram.com/ifpr.oficial/")} style={estilos.menuItem}>
-            <Image source={require("../assets/images/Plataformas/instagram.png")} style={estilos.icone}/>
+          <TouchableOpacity onPress={() => Linking.openURL("https://www.instagram.com/ifpr.oficial/")} style={estilos.linkExterno}>
+            <Image source={require("../assets/images/Plataformas/instagram.png")} style={estilos.iconeExterno}/>
             <Text style={estilos.menulink}>Instagram</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity onPress={() => Linking.openURL("https://www.facebook.com/REITORIAIFPR/?locale=pt_BR")} style={estilos.menuItem}>
-            <Image source={require("../assets/images/PáginaInicial/FACEBOOK.png")} style={estilos.icone}/>
+          <TouchableOpacity onPress={() => Linking.openURL("https://www.facebook.com/REITORIAIFPR/?locale=pt_BR")} style={estilos.linkExterno}>
+            <Image source={require("../assets/images/PáginaInicial/FACEBOOK.png")} style={estilos.iconeExterno}/>
             <Text style={estilos.menulink}>Facebook</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity onPress={() => Linking.openURL("https://ifpr.edu.br/pinhais/")} style={estilos.menuItem}>
-            <Image source={require("../assets/images/PáginaInicial/IFPR_LOGO.png")} style={estilos.icone}/>
+          <TouchableOpacity onPress={() => Linking.openURL("https://ifpr.edu.br/pinhais/")} style={estilos.linkExterno}>
+            <Image source={require("../assets/images/PáginaInicial/IFPR_LOGO.png")} style={estilos.iconeExterno}/>
             <Text style={estilos.menulink}>Site Institucional</Text>
           </TouchableOpacity>
         </View>
 
-      </View>
+      </SafeAreaView>
     </>
   );
 };
 
 const estilos = StyleSheet.create({
+  overlay: {
+    position: "absolute",
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: "rgba(0,0,0,0.2)",
+    zIndex: 9,
+    width: "100%",
+  },
   menuLateral: {
     position: "absolute",
     right: 0,
-    top: 0,
-    width: 415,
-    height: "100%",
+    width: '80%',
+    maxWidth: 400,
+    minWidth: 250,
+    bottom: 0,
     backgroundColor: "white",
-    paddingTop: 80,
-    paddingHorizontal: 10,
+    paddingHorizontal: 16,
     zIndex: 10,
+    elevation: 5,
     justifyContent: "space-between",
+    paddingTop: 5
   },
-
   menuItem: {
-    marginBottom: 20,
+    paddingVertical: 12,
+    flexDirection: 'row',
+    alignItems: 'center',
   },
-
+  iconeAluno: {
+    marginRight: 10,
+  },
   menuTexto: {
     color: "black",
-    fontSize: 22,
-    marginLeft: 40,
+    fontSize: 18,
+    marginLeft: 12,
   },
-
   menuPrincipal: {
     color: "black",
-    fontSize: 26,
+    fontSize: 20,
     fontWeight: "bold",
-    padding: 10,
+    padding: 8,
   },
-
   menulink: {
-    marginTop: -30,
     color: "black",
-    fontSize: 26,
+    fontSize: 15,
     fontStyle: "italic"
   },
-
   close: {
     position: "absolute",
     right: 16,
-    top: 25,
+    top: 16,
   },
-
   icone: {
-    marginLeft: -40,
+    marginLeft: -20,
     width: 30,
     height: 30,
   },
-
   footer: {
-    justifyContent: "center",
-    alignItems: "center",
+    alignItems: "flex-start",
+    width: "100%",
+    marginBottom: 20,
   },
-
   linha: {
     height: 2,
     backgroundColor: "lightgray",
-    marginBottom: 10
+    marginTop: 5
   },
-
   menuItensContainer: {
-    flex: 1,
+    flexGrow: 1,
     justifyContent: "flex-start"
+  },
+  linkExterno: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 22,
+    marginLeft: 0,
+  },
+  iconeExterno: {
+    width: 24,
+    height: 24,
+    marginRight: 10,
   },
 });

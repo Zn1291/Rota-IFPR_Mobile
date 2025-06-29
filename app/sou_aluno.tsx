@@ -2,6 +2,7 @@ import React from 'react';
 import { Header } from '@/components/Header';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Linking, Image } from 'react-native';
 import { router } from 'expo-router';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function SouAluno() {
   const openLink = (url: string) => {
@@ -9,72 +10,64 @@ export default function SouAluno() {
   };
 
   return (
-    <ScrollView>
+    <SafeAreaView style={styles.container} edges={['bottom', 'left', 'right']}>
       <Header/>
-      <View style={styles.linhaVermelha} />
-      <View style={styles.banner}>
-        <Image source={require("../assets/images/SouAluno/Faixa.png")}  style={styles.bannerimg}/>
-        <Text style={styles.bannerText}>Espaço do Aluno</Text>
-      </View>
-
-        <View style={styles.acesso}>
-         
-          <View>
-          <Text style={styles.acessoTitulo}>Acesso rápido</Text>
-          </View>
-          
-          <View style={styles.link}>
-          <Botao texto="Grade Horária" url="https://ifpr.edu.br/pinhais/institucional/area-do-aluno/horario-de-aulas-e-atendimento/"/>
-          <Botao texto="Calendário Acadêmico" url="https://ifpr.edu.br/pinhais/institucional/area-do-aluno/calendario-academico/" />
-          <Botao texto="SUAP" url="https://suap.ifpr.edu.br/" />
-          <Botao texto="AVA" url="https://ava.ifpr.edu.br/" />
+      <View style={{flex: 1}}>
+        <ScrollView contentContainerStyle={{flexGrow: 1}} showsVerticalScrollIndicator={false}>
+          <View style={styles.banner}>
+            <Image source={require("../assets/images/SouAluno/Faixa.png")}  style={styles.bannerimg}/>
+            <Text style={styles.bannerText}>Espaço do Aluno</Text>
           </View>
 
+          <View style={styles.acesso}>
+            <View>
+              <Text style={styles.acessoTitulo}>Acesso rápido</Text>
+            </View>
+            <View style={styles.link}>
+              <Botao texto="Grade Horária" url="https://ifpr.edu.br/pinhais/institucional/area-do-aluno/horario-de-aulas-e-atendimento/"/>
+              <Botao texto="Calendário Acadêmico" url="https://ifpr.edu.br/pinhais/institucional/area-do-aluno/calendario-academico/" />
+              <Botao texto="SUAP" url="https://suap.ifpr.edu.br/" />
+              <Botao texto="AVA" url="https://ava.ifpr.edu.br/" />
+            </View>
+          </View>
+
+          <View style={styles.containerBotoes}>
+            <View style={styles.muralContainer}>
+              <TouchableOpacity onPress={() => router.push("/murallogin")}> 
+                <View style={styles.botaoprincipal}> 
+                  <Image source={require("../assets/images/SouAluno/Muralestudantes.png")} style={styles.imagem}/>
+                  <Text>MURAL DOS ESTUDANTES</Text>
+                </View>
+              </TouchableOpacity>
+            </View>
+            <View style={styles.botoesGrid}>
+              <View style={styles.linhaGrid}>
+                <TouchableOpacity onPress={() => router.push("/manualdoaluno")} style={styles.botaoPequeno}>
+                  <Image source={require("../assets/images/SouAluno/manual.png")} style={styles.imagem}/>
+                  <Text>MANUAL DO ALUNO</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => router.push("/plataformaserecursos")} style={styles.botaoPequeno}>
+                  <Image source={require("../assets/images/SouAluno/plataformas.png")} style={styles.imagem}/>
+                  <Text>PLATAFORMAS</Text>
+                </TouchableOpacity>
+              </View>
+              <View style={styles.linhaGrid}>
+                <TouchableOpacity onPress={() => router.push("/bibliotecas")} style={styles.botaoPequeno}>
+                  <Image source={require("../assets/images/SouAluno/bibliotecas.png")} style={styles.imagem}/>
+                  <Text>BIBLIOTECA</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => router.push("/emailseatendimento")} style={styles.botaoPequeno}>
+                  <Image source={require("../assets/images/SouAluno/atendimento.png")} style={styles.imagem}/>
+                  <Text>ATENDIMENTO</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        </ScrollView>
+        <View style={styles.rodape}>
         </View>
-
-      <View style={styles.section}> 
-        <TouchableOpacity onPress={() => router.push("/murallogin")}>
-        <View style={styles.botaoprincipal}> 
-        <Image source={require("../assets/images/SouAluno/Muralestudantes.png")} style={styles.imagem}/>
-        <Text>MURAL DOS ESTUDANTES</Text>
-        </View>
-        </TouchableOpacity>
       </View>
-  
-      <View style={styles.secondarysection}>
-      <View style={styles.blocobotoes}>
-        <TouchableOpacity onPress={() => router.push("/manualdoaluno")}>
-        <Image source={require("../assets/images/SouAluno/manual.png")} style={styles.imagem}/>
-        <Text>MANUAL DO ALUNO</Text>
-        </TouchableOpacity>
-      </View>
-
-      <View style={styles.blocobotoes}>
-        <TouchableOpacity onPress={() => router.push("/plataformaserecursos")}>
-        <Image source={require("../assets/images/SouAluno/plataformas.png")} style={styles.imagem}/>
-        <Text>PLATAFORMAS</Text>
-        </TouchableOpacity>
-      </View>
-
-      <View style={styles.blocobotoes}>
-        <TouchableOpacity onPress={() => router.push("/bibliotecas")}>
-        <Image source={require("../assets/images/SouAluno/bibliotecas.png")} style={styles.imagem}/>
-        <Text>BIBLIOTECA</Text>
-        </TouchableOpacity>
-      </View>
-
-      <View style={styles.blocobotoes}>
-        <TouchableOpacity onPress={() => router.push("/emailseatendimento")}>
-        <Image source={require("../assets/images/SouAluno/atendimento.png")} style={styles.imagem}/>
-        <Text>ATENDIMENTO</Text>
-        </TouchableOpacity>
-      </View>
-
-      </View>
-    <View style={styles.rodape}>
-    </View>
-
-    </ScrollView>
+    </SafeAreaView>
   );
 }
 
@@ -85,13 +78,20 @@ type BotaoProps = {
 
 function Botao({ texto, url }: BotaoProps) {
   return (
-    <TouchableOpacity style={styles.link} onPress={() => Linking.openURL(url)}>
+    <TouchableOpacity style={styles.linkButton} onPress={() => Linking.openURL(url)}>
       <Text style={styles.linkText}>{texto}</Text>
     </TouchableOpacity>
   );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+  },
+  scrollView: {
+    flex: 1,
+  },
   banner:{ 
     height:87,
   },
@@ -113,7 +113,8 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 4,
     shadowOffset: { width: 0, height: 2 },
-    padding: 20,
+    paddingVertical: 20,
+    paddingHorizontal: 4,
   },
 
   acessoTitulo: {
@@ -125,33 +126,36 @@ const styles = StyleSheet.create({
   },
 
   link: {
+    width: '95%',
     alignSelf: "center",
     flexDirection: 'row',
-    flexWrap: 'wrap',
-    flex: 1,
+    flexWrap: 'nowrap',
     backgroundColor: '#1C1C1C',
     padding: 5,
     borderRadius: 50,
-    marginLeft: 10,
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginLeft: 0,
   },
 
   linkText: {
-    alignContent: "center",
-    fontSize: 12,
-    wordWrap: "break-word",
-    color: '#fff',
+    fontSize: 13,
     fontWeight: 'bold',
+    color: '#fff',
     textAlign: 'center',
-    textDecorationStyle: "solid",
-    textDecorationColor: "white",
+    paddingVertical: 5,
+    paddingHorizontal: 12,
   },
 
-  section: {
-    padding: 20,
+  containerBotoes: {
+    width: '100%',
+    padding: 15,
+    marginTop: 10,
+    marginBottom: 10,
   },
-  
+
   botaoprincipal: {
-    padding:10,
+    padding: 10,
     alignItems: "center",
     backgroundColor: '#ffffff',
     borderRadius: 15,
@@ -160,8 +164,36 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 4,
     shadowOffset: { width: 0, height: 2 },
-    marginBottom: -30,
   },
+  
+  botoesGrid: {
+      width: '100%',
+      justifyContent: 'center',
+      alignItems: 'center',
+      gap: 0,
+  },
+
+  linhaGrid: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+    marginBottom: 12,
+    gap: 15
+  },
+
+  botaoPequeno: {
+    padding: 10,
+    alignItems: "center",
+    backgroundColor: '#ffffff',
+    borderRadius: 15,
+    elevation: 4,
+    shadowColor: '#000',
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    shadowOffset: { width: 0, height: 2 },
+    flex: 1,
+  },
+ 
 
   imagem:{
     width:80,
@@ -169,48 +201,22 @@ const styles = StyleSheet.create({
     alignSelf: "center",
   },
 
-  secondarysection: {
-    padding: 20,
-    flexDirection: "row",
-    flexWrap: "wrap",
-    flex: 1,
-  },
-
-  blocobotoes: {
-    display: "flex",
-    alignItems: "center",
-    width: 180,
-    padding:10,
-    backgroundColor: '#ffffff',
-    borderRadius: 15,
-    elevation: 4,
-    shadowColor: '#000',
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-    shadowOffset: { width: 0, height: 2 },
-    marginBottom: 10,
-    marginRight: 5,
-  },
-
-  bloco: {
-    padding: 20,
-    backgroundColor: '#ffffff',
-    borderRadius: 15,
-    elevation: 4,
-    shadowColor: '#000',
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-    shadowOffset: { width: 0, height: 2 },
-  },
-
   rodape:{
     backgroundColor: "#009F48",
     padding: 30,
   },
 
-  linhaVermelha: {
-    height: 2,
-    backgroundColor: "red",
-    marginHorizontal: 1,
+  linkButton: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    minWidth: 0,
+    marginHorizontal: 4,
+    paddingVertical: 10,
+    paddingHorizontal: 0,
+  },
+
+  muralContainer: {
+    marginBottom: 16,
   },
 });

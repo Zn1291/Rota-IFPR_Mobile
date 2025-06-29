@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, TextInput, Alert, Modal } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, TextInput, Alert, Modal, SafeAreaView } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { Header } from '@/components/Header';
 import { router } from 'expo-router';
@@ -35,7 +35,9 @@ export default function LoginMural() {
   const [filtroSelecionado, setFiltroSelecionado] = useState<Filtro>('recentes');
   const [modalCameraVisivel, setModalCameraVisivel] = useState(false);
   const [temPermissao, setTemPermissao] = useState<boolean | null>(null);
+  const [menuCameraVisivel, setMenuCameraVisivel] = useState(false);
   const cameraRef = useRef<CameraView | null>(null);
+  const scrollViewRef = useRef<ScrollView | null>(null);
   const [cameraType] = useState<CameraType>('back');
 
   useEffect(() => {
@@ -50,7 +52,7 @@ export default function LoginMural() {
     } else {
       q = query(
         collection(db, 'mensagens'),
-        orderBy('dataCriacao', filtroSelecionado === 'antigas' ? 'asc' : 'desc')
+        orderBy('dataCriacao', filtroSelecionado === 'antigas' ? 'desc' : 'asc')
       );
     }
 
@@ -64,6 +66,14 @@ export default function LoginMural() {
 
     return () => unsubscribe();
   }, [filtroSelecionado, userEmail]);
+
+  useEffect(() => {
+    if (mensagens.length > 0 && scrollViewRef.current) {
+      setTimeout(() => {
+        scrollViewRef.current?.scrollToEnd({ animated: true });
+      }, 100);
+    }
+  }, [mensagens, filtroSelecionado]);
 
   useEffect(() => {
     (async () => {
@@ -250,31 +260,30 @@ export default function LoginMural() {
   }, []);
 
   return (
-    <View style={styles.container}>
-      <View style={styles.headerFixo}>
-        <Header />
-        <View style={styles.linhaVermelha} />
-        <View style={styles.banner}>
-          <Image source={require("../assets/images/faixacinza.png")} style={styles.bannerimg} />
-          <Text style={styles.bannerText}>Mural dos Estudantes</Text>
-        </View>
+    <SafeAreaView style={styles.container}>
+      <Header />
+      <View style={styles.banner}>
+        <Image source={require("../assets/images/SouAluno/Faixa.png")} style={styles.bannerimg} />
+        <Text style={styles.bannerText}>Mural dos Estudantes</Text>
+      </View>
 
-        <View style={styles.informativo}>
-          <View style={styles.botoes}>
-            <TouchableOpacity onPress={() => router.push("/murallogin")}>
-              <Text style={styles.botoestexto}> Sair do Mural</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-
-        <View style={styles.section}>
+      <View style={styles.section}>
+        <ScrollView 
+          horizontal 
+          showsHorizontalScrollIndicator={false}
+          style={styles.filtrosScroll}
+          contentContainerStyle={styles.filtrosContainer}
+        >
           {renderBotaoFiltro('Mais recentes', 'recentes')}
           {renderBotaoFiltro('Mais antigas', 'antigas')}
           {renderBotaoFiltro('Fixadas', 'fixadas')}
-        </View>
+        </ScrollView>
+        <TouchableOpacity style={styles.botaoSair} onPress={() => router.push("/murallogin")}>
+          <Ionicons name="log-out-outline" size={20} color="#666" />
+        </TouchableOpacity>
       </View>
 
-      <ScrollView style={styles.scrollContainer}>
+      <ScrollView style={styles.scrollContainer} contentContainerStyle={styles.scrollContent} ref={scrollViewRef}>
         <View style={styles.mensagensWrapper}>
           {mensagens.map((msg) => {
             const estaFixado = msg.fixadoPor?.includes(userEmail);
@@ -325,24 +334,56 @@ export default function LoginMural() {
       </ScrollView>
 
       <View style={styles.inputContainer}>
-        <TextInput
-          style={styles.input}
-          placeholder="Escreva sua mensagem"
-          value={novaMensagem}
-          onChangeText={setNovaMensagem}
-        />
+        <View style={styles.inputWrapper}>
+          <TouchableOpacity 
+            style={styles.botaoCamera} 
+            onPress={() => setMenuCameraVisivel(!menuCameraVisivel)}
+          >
+            <Ionicons name="camera" size={20} color="#666" />
+          </TouchableOpacity>
+          <TextInput
+            style={styles.input}
+            placeholder="Escreva sua mensagem"
+            placeholderTextColor="#999"
+            value={novaMensagem}
+            onChangeText={setNovaMensagem}
+          />
+        </View>
 
         <TouchableOpacity style={styles.sendButton} onPress={enviarMensagem}>
-          <Text style={styles.sendButtonText}>➔</Text>
+          <Ionicons name="send" size={20} color="white" />
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.photoButton} onPress={selecionarImagem}>
-          <Text style={styles.sendButtonText}>📄</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.photoButton} onPress={() => setModalCameraVisivel(true)}>
-          <Text style={styles.sendButtonText}>📷</Text>
-        </TouchableOpacity>
+        {menuCameraVisivel && (
+          <>
+            <TouchableOpacity 
+              style={styles.overlay} 
+              onPress={() => setMenuCameraVisivel(false)}
+            />
+            <View style={styles.menuCamera}>
+              <TouchableOpacity 
+                style={styles.menuItem} 
+                onPress={() => {
+                  setMenuCameraVisivel(false);
+                  setModalCameraVisivel(true);
+                }}
+              >
+                <Ionicons name="camera" size={16} color="white" />
+                <Text style={styles.menuTexto}>Câmera</Text>
+              </TouchableOpacity>
+              <TouchableOpacity 
+                style={styles.menuItem} 
+                onPress={() => {
+                  setMenuCameraVisivel(false);
+                  selecionarImagem();
+                }}
+              >
+                <Ionicons name="images" size={16} color="white" />
+                <Text style={styles.menuTexto}>Galeria</Text>
+              </TouchableOpacity>
+            </View>
+          </>
+        )}
       </View>
 
       <Modal visible={modalCameraVisivel} animationType="slide">
@@ -366,9 +407,7 @@ export default function LoginMural() {
           </TouchableOpacity>
         </View>
       </Modal>
-
-      <View style={styles.rodape} />
-    </View>
+    </SafeAreaView>
   );
 }
 
@@ -377,51 +416,46 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#f5f5f5',
   },
-  headerFixo: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    zIndex: 100,
+  banner: { 
+    height: 87,
   },
-  banner: { height: 87 },
-  bannerimg: { width: 415, height: 89 },
+  bannerimg: { 
+    width: '100%',
+    height: 89,
+    resizeMode: 'cover',
+    position: 'absolute',
+  },
   bannerText: {
     marginLeft: 30,
-    marginTop: -60,
+    marginTop: 20,
     fontSize: 24,
     fontWeight: 'bold',
     color: '#fff',
-  },
-  informativo: {
-    backgroundColor: '#E2E2E2',
-    elevation: 4,
-    shadowColor: '#000',
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-    shadowOffset: { width: 0, height: 2 },
-  },
-  botoes: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    flex: 1,
-    alignSelf: "flex-end",
-  },
-  botoestexto: {
-    fontSize: 24,
-    fontWeight: "bold",
-    marginLeft: 30,
-    marginRight: 30,
+    position: 'relative',
+    zIndex: 1,
   },
   section: {
     flexDirection: "row",
-    justifyContent: "center",
+    justifyContent: "space-between",
     alignItems: "center",
-    paddingVertical: 5,
+    paddingVertical: 10,
+    paddingHorizontal: 15,
     backgroundColor: "#fff",
     borderTopWidth: 1,
     borderBottomWidth: 1,
     borderColor: "#ddd",
+  },
+  filtrosScroll: {
+    flex: 1,
+    marginRight: 15,
+  },
+  filtrosContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  botaoSair: {
+    padding: 5,
+    marginLeft: 10,
   },
   botao: {
     marginHorizontal: 5,
@@ -438,20 +472,11 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "white",
   },
-  rodape: {
-    marginTop: 10,
-    backgroundColor: "#009F48",
-    padding: 30,
-  },
-  linhaVermelha: {
-    height: 2,
-    backgroundColor: "red",
-    marginHorizontal: 1,
-  },
   scrollContainer: {
     flex: 1,
-    marginTop: 280,
-    paddingBottom: 100,
+  },
+  scrollContent: {
+    flexGrow: 1,
   },
   mensagensWrapper: {
     padding: 10,
@@ -519,42 +544,62 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderColor: '#ccc',
     backgroundColor: '#fff',
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    zIndex: 50,
     elevation: 5,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: -2 },
     shadowOpacity: 0.1,
     shadowRadius: 3,
   },
-  input: {
+  inputWrapper: {
+    flexDirection: 'row',
+    alignItems: 'center',
     flex: 1,
+    backgroundColor: '#fff',
+    borderRadius: 20,
     borderWidth: 1,
     borderColor: '#ccc',
-    borderRadius: 20,
+  },
+  input: {
+    flex: 1,
     paddingHorizontal: 15,
     paddingVertical: 8,
-    marginRight: 8,
-    backgroundColor: '#fff',
+    fontSize: 16,
+  },
+  botaoCamera: {
+    padding: 10,
+    marginLeft: 5,
   },
   sendButton: {
     backgroundColor: '#333',
     padding: 10,
     borderRadius: 20,
-    marginRight: 5,
+    marginLeft: 15,
   },
-  photoButton: {
+  menuCamera: {
+    position: 'absolute',
+    bottom: 70,
+    left: 10,
     backgroundColor: '#333',
-    padding: 10,
-    borderRadius: 20,
-    marginLeft: 3,
+    borderRadius: 8,
+    padding: 5,
+    elevation: 5,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    minWidth: 120,
   },
-  sendButtonText: {
-    color: 'white',
+  menuItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 10,
+    borderRadius: 4,
+  },
+  menuTexto: {
+    fontSize: 14,
     fontWeight: 'bold',
+    color: 'white',
+    marginLeft: 8,
   },
   imagemMensagem: {
     width: 250,
@@ -566,5 +611,13 @@ const styles = StyleSheet.create({
   containerImagem: {
     marginTop: 10,
     alignItems: 'center',
+  },
+  overlay: {
+    position: 'absolute',
+    top: -1000,
+    left: -1000,
+    right: -1000,
+    bottom: -1000,
+    backgroundColor: 'transparent',
   },
 });
