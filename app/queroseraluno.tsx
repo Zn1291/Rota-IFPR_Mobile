@@ -59,9 +59,9 @@ export default function QueroSerAluno() {
     <SafeAreaView style={styles.container}>
       <Header/>
       <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollContent}>
-        <Image source={require("../assets/images/QueroSerAluno/Capa.png")}  style={styles.bannerimg}/>
+        <Image source={require("../assets/images/QueroSerAluno/Capa.png")}  style={styles.capa}/>
         <View style={styles.banner}>
-          <Image source={require("../assets/images/SouAluno/Faixa.png")}  style={styles.bannerimg}/>
+          <Image source={require("../assets/images/SouAluno/Faixa.png")}  style={styles.bannerimagem}/>
           <Text style={styles.bannerText}>Seja bem Vindo desde Já!</Text>
         </View>
 
@@ -153,19 +153,29 @@ const styles = StyleSheet.create({
   scrollContent: {
     flexGrow: 1,
   },
+  capa: {
+    width: '100%',
+    height: 250,
+    resizeMode: 'cover',
+  },
+  bannerimagem: {
+    width: '100%',
+    height: 87,
+    resizeMode: 'cover',
+    position: 'absolute',
+  },
   banner:{ 
     height:87,
+    justifyContent: 'center'
   },
-  bannerimg:{
-    width: 415,
-  },
+
   bannerText: {
     marginLeft: 30,
-    marginTop: -60,
     fontSize: 24,
     fontWeight: 'bold',
     color: '#fff',
   },
+  
   videoContainer: {
   height: 220,
   width: '100%',

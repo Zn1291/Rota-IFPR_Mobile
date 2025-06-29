@@ -15,7 +15,7 @@ export default function SouAluno() {
       <View style={{flex: 1}}>
         <ScrollView contentContainerStyle={{flexGrow: 1}} showsVerticalScrollIndicator={false}>
           <View style={styles.banner}>
-            <Image source={require("../assets/images/SouAluno/Faixa.png")}  style={styles.bannerimg}/>
+            <Image source={require("../assets/images/SouAluno/Faixa.png")}  style={styles.bannerimagem}/>
             <Text style={styles.bannerText}>Espaço do Aluno</Text>
           </View>
 
@@ -25,7 +25,7 @@ export default function SouAluno() {
             </View>
             <View style={styles.link}>
               <Botao texto="Grade Horária" url="https://ifpr.edu.br/pinhais/institucional/area-do-aluno/horario-de-aulas-e-atendimento/"/>
-              <Botao texto="Calendário Acadêmico" url="https://ifpr.edu.br/pinhais/institucional/area-do-aluno/calendario-academico/" />
+              <Botao texto="Agenda" url="https://ifpr.edu.br/pinhais/institucional/area-do-aluno/calendario-academico/" />
               <Botao texto="SUAP" url="https://suap.ifpr.edu.br/" />
               <Botao texto="AVA" url="https://ava.ifpr.edu.br/" />
             </View>
@@ -93,14 +93,20 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   banner:{ 
-    height:87,
+    height: 87,
+    justifyContent: 'center',
   },
   bannerimg:{
     width: 415,
   },
+  bannerimagem: {
+    width: '100%',
+    height: 87,
+    resizeMode: 'cover',
+    position: 'absolute',
+  },
   bannerText: {
     marginLeft: 30,
-    marginTop: -60,
     fontSize: 24,
     fontWeight: 'bold',
     color: '#fff',

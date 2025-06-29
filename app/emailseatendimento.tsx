@@ -1,15 +1,19 @@
 import React  from 'react';
 import { Header } from '@/components/Header';
 import { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Linking, Image, } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Linking, Image, SafeAreaView } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 
-function Accordion({ title, children }: { title: string; children: React.ReactNode }) {
+function Accordion({ title, children, icone }: { title: string; children: React.ReactNode; icone?: keyof typeof Ionicons.glyphMap }) {
   const [expanded, setExpanded] = useState(false);
 
   return (
     <View style={accordionStyles.container}>
       <TouchableOpacity onPress={() => setExpanded(!expanded)} style={accordionStyles.header}>
-        <Text style={accordionStyles.title}>{title}</Text>
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          {icone && <Ionicons name={icone} size={22} color="#fff" style={{ marginRight: 10 }} />}
+          <Text style={accordionStyles.title}>{title}</Text>
+        </View>
       </TouchableOpacity>
       {expanded && <View style={accordionStyles.content}>{children}</View>}
     </View>
@@ -19,7 +23,7 @@ function Accordion({ title, children }: { title: string; children: React.ReactNo
 const accordionStyles = StyleSheet.create({
   container: {
     marginHorizontal: 15,
-    marginTop: 20,
+    marginTop: 25,
     borderRadius: 15,
     backgroundColor: '#f2f2f2',
     overflow: 'hidden',
@@ -38,10 +42,7 @@ const accordionStyles = StyleSheet.create({
     fontSize: 18,
     padding: 15,
     backgroundColor: '#fff',
-    alignContent: "center",
-
   },
-
 });
 
 const emailsSessoesPrincipais = [
@@ -213,190 +214,187 @@ const docentesAdministracao = [
   }
 ];
 
-
 export default function QueroSerAluno() {
   const openLink = (url: string) => {
     Linking.openURL(url);
   };
 
   return (
-    <ScrollView> 
+    <SafeAreaView style={{flex: 1, backgroundColor: '#fff'}}>
       <Header/>
-      <View style={styles.linhaVermelha} />
-      <View style={styles.banner}>
-        <Image source={require("../assets/images/SouAluno/Faixa.png")}  style={styles.bannerimg}/>
-        <Text style={styles.bannerText}>Emails e Atendimento</Text>
-      </View>
+      <ScrollView style={{flex: 1}} contentContainerStyle={{flexGrow: 1, justifyContent: 'space-between'}}>
+        <View>
+          <View style={styles.banner}>
+            <Image source={require("../assets/images/SouAluno/Faixa.png")}  style={styles.bannerimagem}/>
+            <Text style={styles.bannerText}>Emails e Atendimento</Text>
+          </View>
 
-      <View style={styles.section}>
-      <View>
-        <Accordion title='Atendimento aos Alunos'>
-        <Text style={styles.descritivo}>
-          No IFPR, tanto a Secretaria quanto os professores possuem horários exclusivos para atendimento. Normalmente, os professores estão disponíveis para agendamentos em um ou dois períodos na semana (duas tardes, por exemplo), para tratar de assuntos relacionados aos conteúdos trabalhados em sala.
-        </Text>
-        <Text style={styles.descritivo}>
-          A Secretaria também disponibiliza horários específicos para atender às demandas dos alunos, como solicitações de documentos, orientações acadêmicas e outros serviços administrativos.
-        </Text>
-        <Text style={styles.descritivo}>
-        Para se informar sobre os horários de atendimento dos professores e da Secretaria, clique abaixo:
-        </Text>
+          <View style={styles.section}>
+          <View>
+            <Accordion title='Atendimento aos Alunos' icone='people'>
+            <Text style={styles.descritivo}>
+              No IFPR, os professores possuem horários exclusivos para atendimento dos alunos. Normalmente, os professores estão disponíveis para agendamentos em um ou dois períodos na semana (duas tardes, por exemplo), para tratar de assuntos relacionados aos conteúdos trabalhados em sala.
+            </Text>
+            <Text style={styles.descritivo}>
+              A Secretaria também está disponível para atender às demandas dos alunos, como solicitações de documentos, orientações acadêmicas e outros serviços administrativos.
+            </Text>
+            <Text style={styles.descritivo}>
+            Para se informar sobre os horários de atendimento dos professores, clique abaixo:
+            </Text>
 
-        <View style={styles.botoes}>
-        <TouchableOpacity onPress={() => Linking.openURL("https://docs.google.com/spreadsheets/d/1q0Fh4VAwX_Nj3b_2uEQD-7zBQGXVz3W5iOHk-0r7Pxk/edit#gid=996102884")} style={styles.botao}>
-          <Text style={styles.textobotao}>HORÁRIO DE ATENDIMENTO DOS PROFESSORES</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => Linking.openURL("https://ifpr.edu.br/pinhais/institucional/secretaria-academica/secretaria-academica/")} style={styles.botao}>
-          <Text style={styles.textobotao}>HORÁRIO DE ATENDIMENTO DA SECRETARIA</Text>
-        </TouchableOpacity>
+            <View style={styles.botoes}>
+            <TouchableOpacity onPress={() => Linking.openURL("https://docs.google.com/spreadsheets/d/1q0Fh4VAwX_Nj3b_2uEQD-7zBQGXVz3W5iOHk-0r7Pxk/edit#gid=996102884")} style={styles.botao}>
+              <Text style={styles.textobotao}>HORÁRIOS DE ATENDIMENTO</Text>
+            </TouchableOpacity>
+            </View>
+            </Accordion>
+          </View>
+
+          <View>
+            <Accordion title="Emails das Sessões Principais do Campus" icone='mail'>
+              {emailsSessoesPrincipais.map((bloco, index) => (
+                <View key={index}>
+                  <Text style={styles.blocotituloemail}>{bloco.titulo}</Text>
+                  {bloco.pessoas.map((pessoa, idx) => (
+                    <Text key={idx} style={styles.blocoemail}>
+                      {pessoa.nome} – <Text style={styles.emailLink} onPress={() => Linking.openURL(`mailto:${pessoa.email}`)}>{pessoa.email}</Text>
+                    </Text>
+                  ))}
+                </View>
+              ))}
+            </Accordion>
+          </View>
+
+          <View>
+            <Accordion title="Emails de Outras Sessões do Campus" icone='business'>
+              {emailsOutrasSessoes.map((bloco, index) => (
+                <View key={index}>
+                  <Text style={styles.blocotituloemail}>{bloco.titulo}</Text>
+                  {bloco.pessoas.map((pessoa, idx) => (
+                    <Text key={idx} style={styles.blocoemail}>
+                      {pessoa.nome} – <Text style={styles.emailLink} onPress={() => Linking.openURL(`mailto:${pessoa.email}`)}>{pessoa.email}</Text>
+                    </Text>
+                  ))}
+                </View>
+              ))}
+            </Accordion>
+          </View>
+
+          <View>
+            <Accordion title="Docentes de Tecnologia" icone='laptop'>
+              {docentesTecnologia.map((bloco, index) => (
+                <View key={index}>
+                  {bloco.pessoas.map((pessoa, idx) => (
+                    <Text key={idx} style={styles.blocoemail}>
+                      <Text style={styles.bold}>{pessoa.nome}</Text> – <Text style={styles.emailLink} onPress={() => Linking.openURL(`mailto:${pessoa.email}`)}>{pessoa.email}</Text>
+                    </Text>
+                  ))}
+                </View>
+              ))}
+            </Accordion>
+          </View>
+
+          <View>
+            <Accordion title="Docentes de Administração" icone='briefcase'>
+              {docentesAdministracao.map((bloco, index) => (
+                <View key={index}>
+                  {bloco.pessoas.map((pessoa, idx) => (
+                    <Text key={idx} style={styles.blocoemail}>
+                      <Text style={styles.bold}>{pessoa.nome}</Text> – <Text style={styles.emailLink} onPress={() => Linking.openURL(`mailto:${pessoa.email}`)}>{pessoa.email}</Text>
+                    </Text>
+                  ))}
+                </View>
+              ))}
+            </Accordion>
+          </View>
+          </View>
         </View>
-
-        </Accordion>
-      </View>
-
-      <View>
-        <Accordion title="Emails das Sessões Principais do Campus">
-          {emailsSessoesPrincipais.map((bloco, index) => (
-            <View key={index}>
-              <Text style={styles.blocotituloemail}>{bloco.titulo}</Text>
-              {bloco.pessoas.map((pessoa, idx) => (
-                <Text key={idx} style={styles.blocoemail}>
-                  {pessoa.nome} – {pessoa.email}
-                </Text>
-              ))}
-            </View>
-          ))}
-        </Accordion>
-      </View>
-
-      <View>
-        <Accordion title="Emails de Outras Sessões do Campus">
-          {emailsOutrasSessoes.map((bloco, index) => (
-            <View key={index}>
-              <Text style={styles.blocotituloemail}>{bloco.titulo}</Text>
-              {bloco.pessoas.map((pessoa, idx) => (
-                <Text key={idx} style={styles.blocoemail}>
-                  {pessoa.nome} – {pessoa.email}
-                </Text>
-              ))}
-            </View>
-          ))}
-        </Accordion>
-      </View>
-
-      <View>
-        <Accordion title="Docentes de Tecnologia">
-          {docentesTecnologia.map((bloco, index) => (
-            <View key={index}>
-              {bloco.pessoas.map((pessoa, idx) => (
-                <Text key={idx} style={styles.blocoemail}>
-                  {pessoa.nome} – {pessoa.email}
-                </Text>
-              ))}
-            </View>
-          ))}
-        </Accordion>
-      </View>
-
-      <View>
-        <Accordion title="Docentes de Administração">
-          {docentesAdministracao.map((bloco, index) => (
-            <View key={index}>
-              {bloco.pessoas.map((pessoa, idx) => (
-                <Text key={idx} style={styles.blocoemail}>
-                  {pessoa.nome} – {pessoa.email}
-                </Text>
-              ))}
-            </View>
-          ))}
-        </Accordion>
-      </View>
-    </View>
-    <View style={styles.rodape}>
-    </View>
-    </ScrollView>
+        <View style={styles.rodape}>
+        </View>
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   banner:{ 
-    height:87,
+    height: 87,
+    justifyContent: 'center',
   },
   bannerimg:{
     width: 415,
   },
+  bannerimagem: {
+    width: '100%',
+    height: 87,
+    resizeMode: 'cover',
+    position: 'absolute',
+  },
   bannerText: {
     marginLeft: 30,
-    marginTop: -60,
     fontSize: 24,
     fontWeight: 'bold',
     color: '#fff',
   },
-
   videoContainer: {
   height: 220,
   width: '100%',
   marginVertical: 20,
   paddingHorizontal: 10,
   },
-
   video: {
     flex: 1,
   },
-
   descritivo:{
     fontSize: 18,
-    textAlign: "justify",
+    lineHeight: 26,
+    marginBottom: 15,
+    textAlign: 'justify',
   },
-
   blocotituloemail:{
     fontSize: 18,
     textAlign: "center",
     fontWeight: "bold",
+    marginBottom: 10,
   },
-
-
   blocoemail:{
     fontSize: 14,
     textAlign: "center",
     marginBottom: 15,
   },
-
   botoes:{
     flexDirection: "row",
     flex: 1,
     flexWrap: "wrap",
     alignSelf: "center",
   },
-
   botao:{
     width:160,
     margin:5,
     backgroundColor: "#333",
-    borderRadius: 15,
-    padding:5,
+    borderRadius: 25,
+    padding:10,
     alignSelf: "center",
   },
-
   textobotao:{
     color: "white",
     textAlign: "center",
     alignContent: "center",
+    fontWeight: "bold",
   },
-
-
-
   section: {
-    marginBottom: 180,
+    marginBottom: 50,
   },
-  
   rodape:{
     backgroundColor: "#009F48",
     padding: 30,
   },
-
-  linhaVermelha: {
-    height: 2,
-    backgroundColor: "red",
-    marginHorizontal: 1,
+  emailLink: {
+    color: '#009F48',
+    textDecorationLine: 'underline',
+    fontWeight: 'bold',
+  },
+  bold: {
+    fontWeight: 'bold',
   },
 });

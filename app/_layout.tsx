@@ -10,6 +10,11 @@ export default function RootLayout() {
       <Stack.Screen name="queroseraluno" options={{ headerShown: false}}/>
       <Stack.Screen name="murallogin" options={{ headerShown: false}}/>
       <Stack.Screen name="muraldosestudantes" options={{ headerShown: false}}/>
+      <Stack.Screen name="manualdoaluno" options={{ headerShown: false}}/>
+      <Stack.Screen name="plataformaserecursos" options={{ headerShown: false}}/>
+      <Stack.Screen name="bibliotecas" options={{ headerShown: false}}/>
+      <Stack.Screen name="emailseatendimento" options={{ headerShown: false}}/>
+      <Stack.Screen name="contato" options={{ headerShown: false}}/>
     </Stack>
   )
 }

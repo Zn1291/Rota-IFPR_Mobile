@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Header } from '@/components/Header';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, TextInput, Alert } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, TextInput, Alert, SafeAreaView } from 'react-native';
 //import email from 'react-native-email';
 
 export default function Contato() {
@@ -29,48 +29,72 @@ export default function Contato() {
   };
 
   return (
-    <ScrollView>
+    <SafeAreaView style={styles.container}>
       <Header/>
-      <View style={styles.linhaVermelha} />
-      <View style={styles.banner}>
-        <Image source={require("../assets/images/SouAluno/Faixa.png")} style={styles.bannerimg}/>
-        <Text style={styles.bannerText}>Mural dos Estudantes</Text>
-      </View>
+      <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollContent}>
+        <View style={styles.banner}>
+          <Image source={require("../assets/images/SouAluno/Faixa.png")} style={styles.bannerimagem}/>
+          <Text style={styles.bannerText}>Contato</Text>
+        </View>
+        <View style={styles.informativo}>
+          <Text style={styles.loginTitulo}>Envie sua dúvida ou sugestão para nós. Assim que possível ela será respondida.</Text>
+        </View>
+        <View>
+          <View style={styles.labelRow}>
+            <Text style={styles.descforms}>Nome</Text>
+            <Text style={styles.asterisco}>*</Text>
+          </View>
+          <TextInput style={styles.input} placeholder="Digite seu Nome" placeholderTextColor="#999" keyboardType="default" autoCapitalize="none" value={nome}  onChangeText={setNome}/>
 
-      <View style={styles.informativo}>
-        <Text style={styles.loginTitulo}> Envie sua Dúvida ou sugestão para nós. Assim que possível ela será respondida.</Text>
-      </View>
+          <View style={styles.labelRow}>
+            <Text style={styles.descforms}>E-mail</Text>
+            <Text style={styles.asterisco}>*</Text>
+          </View>
+          <TextInput style={styles.input} placeholder="Digite seu Email" placeholderTextColor="#999" keyboardType="email-address" autoCapitalize="none" value={emailAddress} onChangeText={setEmailAddress}/>
 
-      <View>
-        <Text style={styles.descforms}>Nome:</Text><Text style={styles.descasterisco}>*</Text>
-        <TextInput style={styles.emailforms} placeholder="Digite seu Nome" keyboardType="default" autoCapitalize="none" value={nome}  onChangeText={setNome}/>
-        <Text style={styles.descforms}>E-mail:</Text><Text style={styles.descasterisco}>*</Text>
-        <TextInput style={styles.emailforms} placeholder="Digite seu Email" keyboardType="email-address" autoCapitalize="none" value={emailAddress} onChangeText={setEmailAddress}/>
-        <Text style={styles.descforms}>Telefone/Whatsapp:</Text><Text style={styles.descasteriscophone}>*</Text>
-        <TextInput style={styles.emailforms} placeholder="Digite seu Telefone/Whatsapp" keyboardType="email-address" autoCapitalize="none" value={telefone} onChangeText={setTelefone}/>
-        <Text style={styles.descforms}>Mensagem:</Text><Text style={styles.descasteriscomessage}>*</Text>
-        <TextInput style={styles.emailforms} placeholder="Digite sua Mensagem" multiline keyboardType="default"  autoCapitalize="none" value={mensagem} onChangeText={setMensagem}/>
-        <Text style={styles.descsenha}>Campos Obrigatórios</Text>
-        <TouchableOpacity style={styles.botao} onPress={enviarEmail}>
-          <Text style={styles.textobotao}>ENVIAR</Text>
-        </TouchableOpacity>
-      </View>
+          <Text style={styles.descforms}>Telefone/Whatsapp</Text>
+          <TextInput style={styles.input} placeholder="Digite seu Telefone/Whatsapp" placeholderTextColor="#999" keyboardType="default" autoCapitalize="none" value={telefone} onChangeText={setTelefone}/>
 
+          <View style={styles.labelRow}>
+            <Text style={styles.descforms}>Mensagem</Text>
+            <Text style={styles.asterisco}>*</Text>
+          </View>
+          <TextInput style={[styles.input, {height: 80}]} placeholder="Digite sua Mensagem" placeholderTextColor="#999" multiline keyboardType="default"  autoCapitalize="none" value={mensagem} onChangeText={setMensagem}/>
+
+          <Text style={styles.aviso}>* Campos obrigatórios</Text>
+          <TouchableOpacity style={styles.botao} onPress={enviarEmail}>
+            <Text style={styles.textobotao}>ENVIAR</Text>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
       <View style={styles.rodape}></View>
-    </ScrollView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  banner: { 
-    height: 87,
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
   },
-  bannerimg: {
-    width: 415,
+  scrollView: {
+    flex: 1,
+  },
+  scrollContent: {
+    flexGrow: 1,
+  },
+  banner: {
+    height: 87,
+    justifyContent: 'center',
+  },
+  bannerimagem: {
+    width: '100%',
+    height: 87,
+    resizeMode: 'cover',
+    position: 'absolute',
   },
   bannerText: {
     marginLeft: 30,
-    marginTop: -60,
     fontSize: 24,
     fontWeight: 'bold',
     color: '#fff',
@@ -83,81 +107,62 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     shadowOffset: { width: 0, height: 2 },
     padding: 20,
+    marginTop: -2,
   },
   loginTitulo: {
     textAlign: "center",
-    fontSize: 16,
+    fontSize: 18,
     color: "black",
     marginBottom: 5,
-  },
-  tituloforms: {
-    padding: 20,
-    textAlign: "center",
-    fontSize: 24,
-    color: "black",
+    lineHeight: 26,
   },
   descforms: {
-    margin: 5,
-    fontSize: 20,
-    color: "gray",
+    marginHorizontal: 10,
+    marginTop: 10,
+    marginBottom: 5,
+    fontSize: 18,
   },
-  descsenha: {
-    textAlign: "center",
-    margin: 5,
-    fontSize: 20,
-    color: "red",
-  },
-  descasterisco: {
-    margin: 5,
-    marginTop: -34,
-    marginLeft: 68,
-    fontSize: 20,
-    color: "red",
-  },
-  descasteriscophone: {
-    margin: 5,
-    marginTop: -34,
-    marginLeft: 190,
-    fontSize: 20,
-    color: "red",
-  },
-  descasteriscomessage: {
-    margin: 5,
-    marginTop: -34,
-    marginLeft: 115,
-    fontSize: 20,
-    color: "red",
-  },
-  emailforms: {
+  input: {
     borderWidth: 1,
     borderRadius: 10,
     borderColor: "gray",
-    margin: 10,
-    fontSize: 20,
+    marginHorizontal: 10,
+    padding: 10,
+    fontSize: 18,
+    backgroundColor: '#fff',
+    marginBottom: 5,
+  },
+  aviso: {
+    textAlign: "center",
+    marginVertical: 10,
+    fontSize: 16,
+    color: "red",
   },
   botao: {
-    marginTop: 10,
+    marginTop: 15,
     display: "flex",
     alignItems: "center",
     alignSelf: "center",
-    backgroundColor: "green",
-    width: 150,
-    padding: 10,
-    borderRadius: 30,   
+    backgroundColor: "black",
+    width: 250,
+    padding: 12,
+    borderRadius: 30,
   },
   textobotao: {
-    fontSize: 26,
+    fontSize: 18,
     color: "white",
+    fontWeight: 'bold',
   },
   rodape: {
-    marginTop: 50,
     backgroundColor: "#009F48",
     padding: 30,
   },
-
-  linhaVermelha: {
-    height: 2,
-    backgroundColor: "red",
-    marginHorizontal: 1,
+  labelRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  asterisco: {
+    color: 'red',
+    fontSize: 18,
   },
 });

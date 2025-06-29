@@ -42,7 +42,6 @@ export default function LoginMural() {
 
   useEffect(() => {
     let q;
-
     if (filtroSelecionado === 'fixadas' && userEmail) {
       q = query(
         collection(db, 'mensagens'),
@@ -55,7 +54,6 @@ export default function LoginMural() {
         orderBy('dataCriacao', filtroSelecionado === 'antigas' ? 'desc' : 'asc')
       );
     }
-
     const unsubscribe = onSnapshot(q, (snapshot) => {
       const lista: Mensagem[] = [];
       snapshot.forEach((doc) => {
@@ -63,7 +61,6 @@ export default function LoginMural() {
       });
       setMensagens(lista);
     });
-
     return () => unsubscribe();
   }, [filtroSelecionado, userEmail]);
 
@@ -84,24 +81,15 @@ export default function LoginMural() {
 
   const enviarMensagem = async () => {
     const authUser = getAuth().currentUser;
-
     if (!authUser) {
       Alert.alert("Erro", "Usuário não autenticado.");
       return;
     }
-
     if (!novaMensagem.trim()) {
       Alert.alert("Erro", "Digite uma mensagem antes de enviar.");
       return;
     }
-
     try {
-      console.log('Enviando mensagem com dados do usuário:', {
-        email: authUser.email,
-        nome: authUser.displayName,
-        foto: authUser.photoURL
-      });
-
       await addDoc(collection(db, "mensagens"), {
         usuarioEmail: authUser.email,
         usuarioNome: authUser.displayName || authUser.email?.split('@')[0] || '',
@@ -120,7 +108,6 @@ export default function LoginMural() {
   const alternarFixado = async (mensagem: Mensagem) => {
     const ref = doc(db, "mensagens", mensagem.id);
     const estaFixado = mensagem.fixadoPor?.includes(userEmail);
-
     try {
       await updateDoc(ref, {
         fixadoPor: estaFixado
@@ -138,18 +125,8 @@ export default function LoginMural() {
       Alert.alert("Erro", "Usuário não autenticado.");
       return;
     }
-    
     try {
-      console.log('Iniciando upload da imagem para Cloudinary:', imageUri);
-      console.log('Dados do usuário:', {
-        email: authUser.email,
-        nome: authUser.displayName,
-        foto: authUser.photoURL
-      });
-      
       const downloadURL = await uploadImageToCloudinary(imageUri);
-      console.log('Upload para Cloudinary concluído:', downloadURL);
-      
       await addDoc(collection(db, "mensagens"), {
         usuarioEmail: authUser.email,
         usuarioNome: authUser.displayName || authUser.email?.split('@')[0] || '',
@@ -159,10 +136,7 @@ export default function LoginMural() {
         dataCriacao: new Date(),
         fixadoPor: [],
       });
-      console.log('Mensagem salva no Firestore');
-      
     } catch (error: any) {
-      console.error('Erro detalhado no upload:', error);
       Alert.alert("Erro ao enviar imagem", `Erro: ${error.message}`);
     }
   };
@@ -170,23 +144,18 @@ export default function LoginMural() {
   const tirarFoto = async () => {
     if (cameraRef.current) {
       try {
-        console.log('Iniciando captura de foto...');
         const foto = await cameraRef.current.takePictureAsync({ 
           quality: 0.8,
           base64: false,
           exif: false
         });
-        console.log('Foto capturada:', foto);
         setModalCameraVisivel(false);
-        
         if (foto && foto.uri) {
-          console.log('URI da foto:', foto.uri);
           await enviarImagemParaCloudinary(foto.uri);
         } else {
           Alert.alert('Erro ao tirar foto', 'Nenhuma foto capturada.');
         }
       } catch (error: any) {
-        console.error('Erro detalhado:', error);
         Alert.alert('Erro ao tirar foto', `Erro: ${error.message}`);
       }
     } else {
@@ -201,15 +170,12 @@ export default function LoginMural() {
         allowsEditing: false,
         quality: 0.8,
       });
-
       if (!result.canceled && result.assets && result.assets[0]?.uri) {
-        console.log('Imagem selecionada:', result.assets[0].uri);
         await enviarImagemParaCloudinary(result.assets[0].uri);
       } else {
         Alert.alert("Nenhuma imagem selecionada.");
       }
     } catch (error: any) {
-      console.error('Erro ao selecionar imagem:', error);
       Alert.alert("Erro ao selecionar imagem", error.message);
     }
   };
@@ -223,50 +189,13 @@ export default function LoginMural() {
     </TouchableOpacity>
   );
 
-  async function atualizarMensagensAntigas() {
-    const auth = getAuth();
-    const user = auth.currentUser;
-
-    if (!user) {
-      console.warn("Usuário não autenticado.");
-      return;
-    }
-
-    const mensagensRef = collection(db, "mensagens");
-    const snapshot = await getDocs(mensagensRef);
-
-    const atualizacoes = snapshot.docs.map(async (documento) => {
-      const dados = documento.data();
-
-      const precisaAtualizar = !dados.usuarioNome || !dados.usuarioFoto || !dados.tipo;
-      const eDoUsuarioAtual = dados.usuarioEmail === user.email;
-
-      if (precisaAtualizar && eDoUsuarioAtual) {
-        const ref = doc(db, "mensagens", documento.id);
-        return updateDoc(ref, {
-          usuarioNome: user.displayName || user.email?.split('@')[0] || '',
-          usuarioFoto: user.photoURL || "",
-          tipo: dados.tipo || (dados.mensagem.startsWith('http') ? 'imagem' : 'texto'),
-        });
-      }
-    });
-
-    await Promise.all(atualizacoes);
-    console.log("Mensagens atualizadas com sucesso.");
-  }
-
-  useEffect(() => {
-    atualizarMensagensAntigas();
-  }, []);
-
   return (
     <SafeAreaView style={styles.container}>
       <Header />
       <View style={styles.banner}>
-        <Image source={require("../assets/images/SouAluno/Faixa.png")} style={styles.bannerimg} />
+        <Image source={require("../assets/images/SouAluno/Faixa.png")} style={styles.bannerimagem} />
         <Text style={styles.bannerText}>Mural dos Estudantes</Text>
       </View>
-
       <View style={styles.section}>
         <ScrollView 
           horizontal 
@@ -278,18 +207,16 @@ export default function LoginMural() {
           {renderBotaoFiltro('Mais antigas', 'antigas')}
           {renderBotaoFiltro('Fixadas', 'fixadas')}
         </ScrollView>
-        <TouchableOpacity style={styles.botaoSair} onPress={() => router.push("/murallogin")}>
+        <TouchableOpacity style={styles.botaoSair} onPress={() => router.push("/murallogin")}> 
           <Ionicons name="log-out-outline" size={20} color="#666" />
         </TouchableOpacity>
       </View>
-
       <ScrollView style={styles.scrollContainer} contentContainerStyle={styles.scrollContent} ref={scrollViewRef}>
         <View style={styles.mensagensWrapper}>
           {mensagens.map((msg) => {
             const estaFixado = msg.fixadoPor?.includes(userEmail);
             const ehImagem = msg.tipo === 'imagem' || 
               (msg.mensagem && msg.mensagem.includes('cloudinary.com'));
-            
             return (
               <View key={msg.id} style={styles.cartaoMensagem}>
                 <View style={styles.cabecalhoMensagem}>
@@ -302,7 +229,6 @@ export default function LoginMural() {
                     <Ionicons name={estaFixado ? "star" : "star-outline"} size={24} color="gold" />
                   </TouchableOpacity>
                 </View>
-
                 {ehImagem ? (
                   <View style={styles.containerImagem}>
                     <Image 
@@ -314,16 +240,13 @@ export default function LoginMural() {
                       }} 
                       style={styles.imagemMensagem}
                       resizeMode="contain"
-                      onError={(error) => {
-                        console.warn('Erro ao carregar imagem:', msg.mensagem, error);
-                      }}
-                      onLoad={() => console.log('Imagem carregada com sucesso:', msg.mensagem)}
+                      onError={() => {}}
+                      onLoad={() => {}}
                     />
                   </View>
                 ) : (
                   <Text style={styles.textoMensagem}>{msg.mensagem}</Text>
                 )}
-
                 <Text style={styles.dataMensagem}>
                   {new Date(msg.dataCriacao.seconds * 1000).toLocaleString()}
                 </Text>
@@ -332,7 +255,6 @@ export default function LoginMural() {
           })}
         </View>
       </ScrollView>
-
       <View style={styles.inputContainer}>
         <View style={styles.inputWrapper}>
           <TouchableOpacity 
@@ -349,11 +271,9 @@ export default function LoginMural() {
             onChangeText={setNovaMensagem}
           />
         </View>
-
         <TouchableOpacity style={styles.sendButton} onPress={enviarMensagem}>
           <Ionicons name="send" size={20} color="white" />
         </TouchableOpacity>
-
         {menuCameraVisivel && (
           <>
             <TouchableOpacity 
@@ -385,7 +305,6 @@ export default function LoginMural() {
           </>
         )}
       </View>
-
       <Modal visible={modalCameraVisivel} animationType="slide">
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'black' }}>
           {temPermissao === null ? (
@@ -418,21 +337,19 @@ const styles = StyleSheet.create({
   },
   banner: { 
     height: 87,
+    justifyContent: 'center',
   },
-  bannerimg: { 
+  bannerimagem: { 
     width: '100%',
-    height: 89,
+    height: 87,
     resizeMode: 'cover',
     position: 'absolute',
   },
   bannerText: {
     marginLeft: 30,
-    marginTop: 20,
     fontSize: 24,
     fontWeight: 'bold',
     color: '#fff',
-    position: 'relative',
-    zIndex: 1,
   },
   section: {
     flexDirection: "row",
@@ -447,7 +364,6 @@ const styles = StyleSheet.create({
   },
   filtrosScroll: {
     flex: 1,
-    marginRight: 15,
   },
   filtrosContainer: {
     flexDirection: "row",
@@ -468,7 +384,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#007B55",
   },
   botoefilter: {
-    fontSize: 16,
+    fontSize: 13,
     fontWeight: "bold",
     color: "white",
   },

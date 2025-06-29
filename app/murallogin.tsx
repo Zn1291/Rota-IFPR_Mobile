@@ -52,13 +52,13 @@ export default function LoginMural() {
       <Header/>
       <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollContent}>
         <View style={styles.banner}>
-          <Image source={require("../assets/images/SouAluno/Faixa.png")}  style={styles.bannerimg}/>
+          <Image source={require("../assets/images/SouAluno/Faixa.png")}  style={styles.bannerimagem}/>
           <Text style={styles.bannerText}>Mural dos Estudantes</Text>
         </View>
 
         <View style={styles.informativo}>
           <View>
-            <Text style={styles.loginTitulo}> Informe seu email acadêmico e senha para acessar o Mural dos Estudantes</Text>
+            <Text style={styles.loginTitulo}> Informe seu email e senha para acessar o Mural dos Estudantes</Text>
           </View>
         </View>
 
@@ -68,10 +68,11 @@ export default function LoginMural() {
 
             {loginError ? <Text style={styles.errorMessage}>{loginError}</Text> : null}
 
-            <Text style={styles.descforms}>Login: (Email Institucional) </Text>
+            <Text style={styles.descforms}>Login: </Text>
             <TextInput
               style={styles.emailforms}
               placeholder="Digite seu e-mail"
+              placeholderTextColor="grey"
               keyboardType="email-address"
               autoCapitalize="none"
               value={email}
@@ -82,6 +83,7 @@ export default function LoginMural() {
             <TextInput
               style={styles.senhaforms}
               placeholder="Digite sua senha"
+              placeholderTextColor="grey"
               secureTextEntry={!mostrarSenha}
               value={senha}
               onChangeText={setSenha}
@@ -97,10 +99,6 @@ export default function LoginMural() {
 
             <TouchableOpacity style={styles.botao} onPress={handleLogin}>
               <Text style={styles.textobotao}>Entrar</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity style={styles.botaoDireto} onPress={() => router.push('/muraldosestudantes')}>
-              <Text style={styles.textobotaoDireto}>Acesso Direto ao Mural</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -122,22 +120,20 @@ const styles = StyleSheet.create({
     flexGrow: 1,
   },
   banner:{
-    height:87,
+    height: 87,
+    justifyContent: 'center',
   },
-  bannerimg:{
+  bannerimagem:{
     width: '100%',
-    height:89,
+    height: 87,
     resizeMode: 'cover',
     position: 'absolute',
   },
   bannerText: {
     marginLeft: 30,
-    marginTop: 20,
     fontSize: 24,
     fontWeight: 'bold',
     color: '#fff',
-    position: 'relative',
-    zIndex: 1,
   },
 
   informativo: {
@@ -154,7 +150,6 @@ const styles = StyleSheet.create({
   loginTitulo: {
     textAlign: "center",
     fontSize: 18,
-    color: "black",
     marginBottom: 5,
     lineHeight: 26,
   },
@@ -164,7 +159,6 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
     textAlign: "center",
     fontSize: 24,
-    color: "black",
     fontWeight: 'bold',
   },
 
@@ -173,14 +167,13 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginBottom: 5,
     fontSize: 18,
-    color: "gray",
   },
 
   descsenha:{
     textAlign: "center",
     marginVertical: 10,
     fontSize: 16,
-    color: "gray",
+    color: "grey",
   },
 
   emailforms:{
