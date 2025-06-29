@@ -24,7 +24,7 @@ interface Mensagem {
 
 type Filtro = 'recentes' | 'antigas' | 'fixadas';
 
-export default function LoginMural() {
+export default function MuralDosEstudantes() {
   const auth = getAuth();
   const user = auth.currentUser;
   const userEmail = user?.email || '';

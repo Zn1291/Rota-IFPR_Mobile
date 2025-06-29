@@ -5,8 +5,8 @@ import Ionicons from '@expo/vector-icons/Ionicons'; // Importa o ícone para mos
 import { router } from 'expo-router'; // Importa o roteador
 
 // --- IMPORTAÇÕES DO FIREBASE PARA LOGIN ---
-import { signInWithEmailAndPassword } from 'firebase/auth'; // Função específica para login
-import { auth } from './firebase'; // Importa a instância 'auth' que você exportou no firebase.tsx
+// import { signInWithEmailAndPassword } from 'firebase/auth'; // Função específica para login
+// import { auth } from './firebase'; // Importa a instância 'auth' que você exportou no firebase.tsx
 // --- FIM DAS IMPORTAÇÕES DO FIREBASE PARA LOGIN ---
 
 export default function LoginMural() {
@@ -19,45 +19,55 @@ export default function LoginMural() {
   const [email, setEmail] = useState(''); // Estado para o valor do email
   const [senha, setSenha] = useState(''); // Estado para o valor da senha
   const [loginError, setLoginError] = useState<string | null>(null); // Estado para exibir erros de login
+  const [isLoading, setIsLoading] = useState(false); // Estado para controlar loading
 
-  // --- FUNÇÃO DE LOGIN COM FIREBASE ---
-  const handleLogin = async () => { // Tornamos a função assíncrona para esperar a resposta do Firebase
-    setLoginError(null); // Limpa qualquer erro anterior ao tentar logar
-    if (!email || !senha) { // Verifica se os campos estão vazios
-      setLoginError("Por favor, preencha email e senha.");
-      return; // Interrompe a execução se campos vazios
-    }
-
-    try {
-      // Chama a função de login do Firebase Authentication
-      const userCredential = await signInWithEmailAndPassword(auth, email, senha);
-
-      // Se o login for bem-sucedido (a linha acima não lançou erro):
-      const user = userCredential.user; // Obtém as informações do usuário logado
-      console.log('Usuário logado com sucesso:', user.email); // Log para confirmar no console
-
-      // Exibe um alerta de sucesso e, APÓS o usuário clicar em OK, navega para a tela do mural
-      Alert.alert('Sucesso', `Login realizado com o email: ${user.email}`, [
-        { text: 'OK', onPress: () => router.push('/muraldosestudantes') } // Navega para a rota '/muraldosestudantes'
-      ]);
-
-    } catch (error: any) { // Captura qualquer erro que ocorra durante a chamada signInWithEmailAndPassword
-      console.error('Erro ao fazer login:', error); // Loga o erro completo no console
-
-      // Trata os erros específicos do Firebase Auth e define a mensagem de erro para exibição na UI
-      if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
-        setLoginError("Email ou senha inválidos.");
-      } else if (error.code === 'auth/invalid-email') {
-        setLoginError("Formato de email inválido.");
-      }
-      else {
-        // Para outros erros não esperados do Firebase Auth
-        setLoginError("Erro ao tentar login. Tente novamente.");
-      }
-    }
+  // Função para validar email institucional do IFPR
+  const validarEmailInstitucional = (email: string): boolean => {
+    const padroesIFPR = [
+      /^[a-zA-Z0-9._%+-]+@aluno\.ifpr\.edu\.br$/i,
+      /^[a-zA-Z0-9._%+-]+@ifpr\.edu\.br$/i,
+      /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.ifpr\.edu\.br$/i,
+    ];
+    return padroesIFPR.some(padrao => padrao.test(email));
   };
-  // --- FIM DA FUNÇÃO DE LOGIN COM FIREBASE ---
 
+  // Função de login simulada para teste no Expo Go
+  const handleLogin = async () => {
+    setLoginError(null);
+    setIsLoading(true);
+
+    if (!email || !senha) {
+      setLoginError("Por favor, preencha email e senha.");
+      setIsLoading(false);
+      return;
+    }
+
+    if (!validarEmailInstitucional(email)) {
+      setLoginError("Apenas emails institucionais do IFPR são permitidos. Use seu email @aluno.ifpr.edu.br ou @ifpr.edu.br");
+      setIsLoading(false);
+      return;
+    }
+
+    // Simula um delay de login
+    setTimeout(() => {
+      // Para teste, aceita qualquer senha se o email for válido
+      if (validarEmailInstitucional(email)) {
+        Alert.alert(
+          'Login de Teste', 
+          `Login simulado realizado com sucesso!\nEmail: ${email}\n\n⚠️ Este é um teste sem autenticação real.`, 
+          [
+            { 
+              text: 'OK', 
+              onPress: () => router.push('/muraldosestudantes') 
+            }
+          ]
+        );
+      } else {
+        setLoginError("Email ou senha inválidos.");
+      }
+      setIsLoading(false);
+    }, 1500);
+  };
 
   return (
     <ScrollView>
@@ -85,7 +95,7 @@ export default function LoginMural() {
       <View >
         <View>
           {/* Título do formulário */}
-          <Text style={styles.tituloforms}>LOGIN</Text>
+          <Text style={styles.tituloforms}>LOGIN DE TESTE</Text>
 
           {/* Exibe a mensagem de erro aqui se houver */}
           {loginError ? <Text style={styles.errorMessage}>{loginError}</Text> : null}
@@ -122,9 +132,25 @@ export default function LoginMural() {
           </TouchableOpacity>
 
           {/* Botão principal "Entrar" que CHAMA A LÓGICA DE LOGIN COM FIREBASE */}
-          <TouchableOpacity style={styles.botao} onPress={handleLogin}>
-            <Text style={styles.textobotao}>Entrar</Text>
+          <TouchableOpacity 
+            style={[styles.botao, isLoading && styles.botaoDesabilitado]} 
+            onPress={handleLogin}
+            disabled={isLoading}
+          >
+            <Text style={styles.textobotao}>
+              {isLoading ? 'Entrando...' : 'Entrar (Teste)'}
+            </Text>
           </TouchableOpacity>
+
+          {/* Informação adicional sobre email institucional */}
+          <View style={styles.infoContainer}>
+            <Text style={styles.infoText}>
+              ⓘ Use seu email institucional do IFPR (@aluno.ifpr.edu.br)
+            </Text>
+            <Text style={styles.infoText}>
+              🔧 Modo de teste - sem autenticação real
+            </Text>
+          </View>
 
           {/* Botão BETA - Apenas navega para a tela do mural sem logar (útil para desenvolvimento/teste da tela mural) */}
           {/* Este botão pode ser removido em produção */}
@@ -250,6 +276,11 @@ const styles = StyleSheet.create({
     borderRadius: 30,
   },
 
+  botaoDesabilitado: {
+    backgroundColor: "#ccc",
+    opacity: 0.7,
+  },
+
   textobotao:{
     fontSize: 22, // Ajustado o tamanho da fonte
     color:"white",
@@ -268,5 +299,18 @@ const styles = StyleSheet.create({
     height: 2,
     backgroundColor: "red",
     marginHorizontal: 0, // Borda de ponta a ponta
+  },
+
+  infoContainer: {
+    marginTop: 10,
+    alignItems: 'center',
+    paddingHorizontal: 20,
+  },
+
+  infoText: {
+    fontSize: 14,
+    color: '#666',
+    textAlign: 'center',
+    fontStyle: 'italic',
   },
 });

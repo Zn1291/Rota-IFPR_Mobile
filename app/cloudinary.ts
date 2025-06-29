@@ -56,4 +56,13 @@ export const uploadImageToCloudinary = async (imageUri: string): Promise<string>
     console.error('Erro no upload para Cloudinary:', error);
     throw new Error(`Erro ao fazer upload para Cloudinary: ${error}`);
   }
-}; 
+};
+
+// Componente React para compatibilidade com Expo Router
+import React from 'react';
+
+const CloudinaryProvider: React.FC = () => {
+  return null; // Este componente não renderiza nada, apenas garante que o Cloudinary seja inicializado
+};
+
+export default CloudinaryProvider; 

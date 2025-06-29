@@ -13,10 +13,27 @@ const firebaseConfig = {
   measurementId: "G-WZLK3NRW3E"
 };
 
+// Inicializa o app Firebase
 const app = initializeApp(firebaseConfig);
 
-export const auth = getAuth(app);
+// Inicializa os serviços
+const auth = getAuth(app);
+const db = getFirestore(app);
+const storage = getStorage(app);
 
-export const db = getFirestore(app);
+// Exporta os serviços
+export { auth, db, storage };
 
-export const storage = getStorage(app);
+// Componente React para compatibilidade com Expo Router
+import React, { useEffect } from 'react';
+
+const FirebaseProvider: React.FC = () => {
+  useEffect(() => {
+    // Garante que o Firebase seja inicializado quando o componente for montado
+    console.log('Firebase inicializado no provider');
+  }, []);
+
+  return null; // Este componente não renderiza nada, apenas garante que o Firebase seja inicializado
+};
+
+export default FirebaseProvider;

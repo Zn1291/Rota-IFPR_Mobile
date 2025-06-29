@@ -7,9 +7,7 @@ export default function Index() {
   return (
     <>
       <Header/>
-      <View style={{ flex: 1 }}>
-
-        <View style={estilos.linhaVermelha} />
+      <View style={{ flex: 1, paddingTop: 70 }}>
 
         <ImageBackground
           source={require("../assets/images/PáginaInicial/banner.png")}
