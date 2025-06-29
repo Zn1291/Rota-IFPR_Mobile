@@ -5,7 +5,7 @@ export async function uploadImageToCloudinary(uri: string): Promise<string> {
       uri,
       name: "upload.jpg",
       type: "image/jpeg",
-    } as any); // 👈 necessário para tipos do React Native
+    } as any); 
   
     data.append("upload_preset", "ml_default");
   
