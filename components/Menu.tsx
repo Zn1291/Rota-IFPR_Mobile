@@ -1,4 +1,3 @@
-import React from "react";
 import {
   Linking,
   StyleSheet,
@@ -10,12 +9,15 @@ import {
 import AntDesign from "@expo/vector-icons/AntDesign";
 import {router} from 'expo-router';
 
-const HEADER_TOTAL_HEIGHT = 73;
 
 export const Menu = (props: { onClose: () => void }) => {
   return (
     <>
-      <View style={[estilos.menuLateral, { top: HEADER_TOTAL_HEIGHT }]}>
+      <View style={estilos.menuLateral}>
+        <TouchableOpacity style={estilos.close} onPress={props.onClose}>
+          <AntDesign name="closecircleo" size={36} color="black" />
+        </TouchableOpacity>
+        <View style={estilos.linha}/>
         <View style={estilos.menuItensContainer}>
           <TouchableOpacity onPress={() => router.push("/sou_aluno")} style={estilos.menuItem}>
             <Text style={estilos.menuPrincipal}>Sou Aluno</Text>
@@ -72,9 +74,11 @@ const estilos = StyleSheet.create({
   menuLateral: {
     position: "absolute",
     right: 0,
+    top: 0,
     width: 415,
     height: "100%",
     backgroundColor: "white",
+    paddingTop: 80,
     paddingHorizontal: 10,
     zIndex: 10,
     justifyContent: "space-between",
@@ -107,7 +111,7 @@ const estilos = StyleSheet.create({
   close: {
     position: "absolute",
     right: 16,
-    top: 16,
+    top: 25,
   },
 
   icone: {

@@ -26,12 +26,3 @@ export async function uploadImageToCloudinary(uri: string): Promise<string> {
   
     return json.secure_url;
   }
-
-// Componente React para compatibilidade com Expo Router
-import React from 'react';
-
-const UploadImageProvider: React.FC = () => {
-  return null; // Este componente não renderiza nada, apenas garante que o upload seja inicializado
-};
-
-export default UploadImageProvider;
