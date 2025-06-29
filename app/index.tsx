@@ -57,7 +57,6 @@ export default function Index() {
   );
 }
 
-/**Estilos usados na página */
 const estilos = StyleSheet.create({
   linhaVermelha: {
     height: 2,
