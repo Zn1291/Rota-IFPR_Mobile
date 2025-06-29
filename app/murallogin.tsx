@@ -94,6 +94,8 @@ export default function LoginMural() {
 
             <TouchableOpacity onPress={() => router.push("/redefinirsenhamural")}>
               <Text style={styles.descsenha}>Esqueceu sua senha?</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => router.push("/redefinirsenhamural")}>
               <Text style={styles.descsenha}>Precisa cadastar uma conta?</Text>
             </TouchableOpacity>
 
@@ -103,7 +105,7 @@ export default function LoginMural() {
           </View>
         </View>
       </ScrollView>
-      <View style={styles.rodape}>      </View>
+      <View style={styles.rodape}></View>
     </SafeAreaView>
   );
 }
