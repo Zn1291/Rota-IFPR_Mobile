@@ -136,8 +136,7 @@ export default function QueroSerAluno() {
         </Acordeao>
       </View>
       </ScrollView>
-      <View style={styles.rodape}>
-      </View>
+      <View style={styles.rodape}></View>
     </SafeAreaView>
   );
 }
