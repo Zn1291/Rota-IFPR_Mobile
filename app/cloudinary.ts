@@ -1,8 +1,8 @@
 // Configuração do Cloudinary
 const CLOUDINARY_CONFIG = {
-  cloud_name: 'dtmhyyf4o',
-  api_key: '542878933727314',
-  api_secret: 'n80XVtNq6H7Rx86qpduDZSKehG0',
+  cloud_name: '***',
+  api_key: '***',
+  api_secret: '***',
 };
 
 export const uploadImageToCloudinary = async (imageUri: string): Promise<string> => {
